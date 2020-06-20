@@ -6,6 +6,10 @@ shall do the exact same thing as ../python/urls_reader.py
 const readerUtil = require('./readerUtil');
 
 
+/**
+ * @param {string} arg
+ * @returns {any[]}
+*/
 function typeProcessor(arg) {
     /* 
     if the type of an argument is defined map it correctly
@@ -36,6 +40,12 @@ function typeProcessor(arg) {
 };
 
 
+
+/** 
+ * @param {string} string
+ * @param {string} appName
+ * @returns {any[]} [reverse_name, [[argument_1, type],...[argument_n, type]], view_name]
+*/
 function urlProcessor(string, appName) {
     /* 
     Takes a string of path() and returns
@@ -88,7 +98,7 @@ function urlProcessor(string, appName) {
     let args = string.match(argsPattern);
     args = args? args.map(
         arg => typeProcessor(arg.replace('>', '').replace('<', ''))
-    ): [null];
+    ): [];
     
 
     // create the view name
@@ -109,6 +119,12 @@ function urlProcessor(string, appName) {
 };
 
 
+
+/** 
+ * @param {string} urlsFileText
+ * @param {string} filePath
+ * @returns {object} {'app_name': [list of all urls]}
+*/
 function urlsFinder (urlsFileText, filePath) {
     /* 
     get a urls.py file text and extract 'app_name' and all urls

@@ -4,6 +4,7 @@ Look for urls.py and read all the urls paths declared
 
 const walk = require('walk');
 const fs = require('fs');
+const vscode = require('vscode');
 const urlsReader = require('./urlsReader');
 
 
@@ -40,6 +41,10 @@ function realProjectWalk (realProjectPath, options) {
 };
 
 
+/** 
+ * @param {string} projectSourcePath
+ * @returns {string[]} urlFiles
+*/
 function walkProject(projectSourcePath) {
     /* 
         walk a projects and record all files that are urls.py 
@@ -72,7 +77,7 @@ function walkProject(projectSourcePath) {
             },
             end: function () {
                 if (djangoProject === false) {
-                    throw Error('This is not a django project');
+                    vscode.window.showInformationMessage('This is not a django project');
                 };
             },
             errors: function (root, stats, next) {
@@ -86,6 +91,10 @@ function walkProject(projectSourcePath) {
 };
 
 
+/**
+ * @param {string} path
+ * @returns {object} cleanUrls
+*/
 function main(path) {
     /* 
         Combine all logic and get the urls defined in this format

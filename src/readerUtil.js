@@ -1,3 +1,8 @@
+/** 
+ * @param {string} stringToRead
+ * @param {string} braceToRead
+ * @returns {string[]}
+*/
 function bracketReader (stringToRead, braceToRead) {
     /* 
     get to know where a bracket starts and is successfully closed
@@ -32,8 +37,8 @@ function bracketReader (stringToRead, braceToRead) {
     let start = stringToReadAsList.findIndex((item, index) => getItemIdex(item, index));
 
     while (start > -1) {
-        endPosition = null;
-        openingBraceCount = 1;
+        let endPosition = null;
+        let openingBraceCount = 1;
 
 
         // loop through the whole string and find the closing brace
