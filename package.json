@@ -18,8 +18,65 @@
 			{
 				"command": "read-urls.readUrls",
 				"title": "Read Urls"
+			},
+			{
+				"command": "read-urls.refresh",
+				"title": "Refresh",
+				"icon": {
+					"light": "media/refresh.png",
+					"dark": "media/refresh.png"
+				}
+			},
+			{
+				"command": "read-urls.copyForTemplate",
+				"title": "Copy for template",
+				"icon": {
+					"light": "media/copy.png",
+					"dark": "media/copy.png"
+				}
+			},
+			{
+				"command": "read-urls.copyForReverse",
+				"title": "Copy for reverse",
+				"icon": {
+					"light": "media/copy.png",
+					"dark": "media/copy.png"
+				}
+			},
+			{
+				"command": "read-urls.copyForReverseLazy",
+				"title": "Copy for reverse lazy",
+				"icon": {
+					"light": "media/copy.png",
+					"dark": "media/copy.png"
+				}
 			}
 		],
+		"menus": {
+			"view/title": [
+				{
+					"command": "read-urls.refresh",
+					"group": "navigation"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "read-urls.copyForTemplate",
+					"group": "inline",
+					"when": "viewItem == urlName"
+				},
+				{
+					"command": "read-urls.copyForReverse",
+					"group": "inline",
+					"when": "viewItem == urlName"
+				},
+				{
+					"command": "read-urls.copyForReverseLazy",
+					"group": "inline",
+					"when": "viewItem == urlName"
+				}
+			]
+		},
 		"viewsContainers": {
 			"activitybar": [
 				{
@@ -42,7 +99,7 @@
 		"viewsWelcome": [
 			{
 				"view": "project-urls",
-				"contents": "No URLs Detected. \n Read the django documentation on [urls](https://django.org/urls)."
+				"contents": "No URLs Detected. \n Read the django documentation on [urls](https://muremwa.pythonanywhere.com/blog/django-read-urls-extension)"
 			}
 		]
 	},
@@ -63,6 +120,7 @@
 		"vscode-test": "^1.3.0"
 	},
 	"dependencies": {
+		"clipboardy": "^2.3.0",
 		"walk": "^2.3.14"
 	}
 }
