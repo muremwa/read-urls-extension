@@ -1,17 +1,20 @@
+const vscode = require('vscode');
+
+
 /** 
  * @param {string} stringToRead
  * @param {string} braceToRead
  * @returns {string[]}
 */
-function bracketReader (stringToRead, braceToRead) {
+function bracketReader (stringToRead, braceToRead, filePath) {
     /* 
     get to know where a bracket starts and is successfully closed
     */
-    if ([stringToRead, braceToRead].some(arg => arg === undefined)) {
+    if ([stringToRead, braceToRead, filePath].some(arg => arg === undefined)) {
         throw TypeError('one of the arguments is undefined');
     }
 
-    if (typeof stringToRead !== 'string' || typeof braceToRead !== 'string') {
+    if (typeof stringToRead !== 'string' || typeof braceToRead !== 'string' || typeof filePath !== 'string') {
         throw TypeError('String to read is not a string');
     }
 
@@ -67,7 +70,8 @@ function bracketReader (stringToRead, braceToRead) {
 
         // if it does not close raise a value error
         if (openingBraceCount) {
-            throw Error(`No closing brace found!`);
+            vscode.window.showErrorMessage(`Syntax error: Missing '${partnerBrace}' in ${filePath}`);
+            break;
         };
 
         // add the brace to brace positions [start, end_position] => [[start, end_position]]

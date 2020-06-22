@@ -148,19 +148,19 @@ function urlsFinder (urlsFileText, filePath) {
 
 
     // extract urls patterns first? they are enclosed in a list
-    const urlPatterns = readerUtil.bracketReader(urlsFileText, '[');
+    const urlPatterns = readerUtil.bracketReader(urlsFileText, '[', filePath);
 
     // extract url pattens
     for (let urlPatternList of urlPatterns) {
         urls = urls.concat(
-            readerUtil.bracketReader(urlPatternList, '(')
+            readerUtil.bracketReader(urlPatternList, '(', filePath)
         );
     };
 
     const solution = {};
     solution[`${appName}`] = urls;
 
-    return solution;    
+    return solution;
 };
 
 
