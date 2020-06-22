@@ -138,7 +138,7 @@ function urlsFinder (urlsFileText, filePath) {
     let urls = [];
 
     // reg ex for app name
-    const appNamePattern = /app_name.*?[\'\"](.*?)[\'\"]/;
+    const appNamePattern = /^app_name.*?[\'\"](.*?)[\'\"]/m;
     
     // extract app name
     let possibleAppNames = urlsFileText.match(appNamePattern);
