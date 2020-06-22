@@ -10,15 +10,11 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:read-urls.readUrls"
+		"onView:project-urls"
 	],
 	"main": "./extension.js",
 	"contributes": {
 		"commands": [
-			{
-				"command": "read-urls.readUrls",
-				"title": "Read Urls"
-			},
 			{
 				"command": "read-urls.refresh",
 				"title": "Refresh",

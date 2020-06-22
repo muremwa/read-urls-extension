@@ -43,62 +43,65 @@ function getReverseUrl (treeItem, lazy = false) {
 	addToClipBoard(reverseUrl);
 
 	vscode.window.showInformationMessage(`Copied for ${lazy?'for reverse_lazy': 'for reverse'} to clipboard`);
-}
+};
+
+
+function readAndDisplayUrls () {
+	// retrieve all urls using reader by passing in workspace path
+	const urlPatterns = reader.reader(vscode.workspace.rootPath);
+
+	// this shall contain all TreeItems to show
+	const ultimatePatterns = [];
+
+	// loop through all discovered patterns create TreeItems
+	Object.keys(urlPatterns).forEach((key) => {
+		// filter out patterns with no reverse name
+		let patterns = urlPatterns[key].filter((item) => ![null, undefined].includes(item[0]));
+		
+		// create all TreeItems for each app
+		let items = patterns.map((patternItems) => {
+			let name = patternItems[0];
+			let args = patternItems[1];
+
+			// ensure args are not null
+			if (!Array.isArray(args) || args === undefined || args === null) {
+				args = [];
+			};
+
+			args = args.filter((arg) => arg !== null || arg !== undefined);
+
+
+			// map an arg to a tree item
+			args = args.map((arg) => {
+				let argType = arg[1] === null? 'type_undecleared': `${arg[1]}`;
+				return new provider.TreeItem(`${arg[0]} -> ${argType}`, [], false, [], name, true);
+			})
+
+			return new provider.TreeItem(name, args, false, [], key, false);
+		});
+
+		if (items.length > 0) {
+			// add each app TreeItem with it's accompanying urls TreeItem(s)
+			ultimatePatterns.push(
+				new provider.TreeItem(key, items, true)
+			);
+		};
+	});
+
+	vscode.window.registerTreeDataProvider('project-urls', new provider.TreeDataProvider(ultimatePatterns));
+	
+};
 
 
 /**
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
-	let readUrls = vscode.commands.registerCommand('read-urls.readUrls', function () {
-		// retrieve all urls using reader by passing in workspace path
-		const urlPatterns = reader.reader(vscode.workspace.rootPath);
+	// read and display every url
+	readAndDisplayUrls();
 
-		// this shall contain all TreeItems to show
-		const ultimatePatterns = [];
-
-		// loop through all discovered patterns create TreeItems
-		Object.keys(urlPatterns).forEach((key) => {
-			// filter out patterns with no reverse name
-			let patterns = urlPatterns[key].filter((item) => ![null, undefined].includes(item[0]));
-			
-			// create all TreeItems for each app
-			let items = patterns.map((patternItems) => {
-				let name = patternItems[0];
-				let args = patternItems[1];
-
-				// ensure args are not null
-				if (!Array.isArray(args) || args === undefined || args === null) {
-					args = [];
-				};
-
-				args = args.filter((arg) => arg !== null || arg !== undefined);
-
-
-				// map an arg to a tree item
-				args = args.map((arg) => {
-					let argType = arg[1] === null? 'type_undecleared': `${arg[1]}`;
-					return new provider.TreeItem(`${arg[0]} -> ${argType}`, [], false, [], name, true);
-				})
-
-				return new provider.TreeItem(name, args, false, [], key, false);
-			});
-
-			if (items.length > 0) {
-				// add each app TreeItem with it's accompanying urls TreeItem(s)
-				ultimatePatterns.push(
-					new provider.TreeItem(key, items, true)
-				);
-			};
-		});
-
-		vscode.window.registerTreeDataProvider('project-urls', new provider.TreeDataProvider(ultimatePatterns));
-
-			// Refresh button
-		vscode.commands.registerCommand('read-urls.refresh', () => vscode.commands.executeCommand('read-urls.readUrls'));
-
-	});
-
+	// Refresh button
+	vscode.commands.registerCommand('read-urls.refresh', () => readAndDisplayUrls());
 
 	// copy for template
 	vscode.commands.registerCommand('read-urls.copyForTemplate', function (treeItem) {
@@ -125,13 +128,6 @@ function activate(context) {
 	// copy reverse lazy
 	vscode.commands.registerCommand('read-urls.copyForReverseLazy', (treeItem) => getReverseUrl(treeItem, true));
 
-
-
-
-
-
-
-	context.subscriptions.push(readUrls);
 };
 exports.activate = activate;
 
