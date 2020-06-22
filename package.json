@@ -49,6 +49,24 @@
 			}
 		],
 		"menus": {
+			"commandPalette": [
+				{
+					"command": "read-urls.refresh",
+					"when": "false"
+				},
+				{
+					"command": "read-urls.copyForTemplate",
+					"when": "false"
+				},
+				{
+					"command": "read-urls.copyForReverse",
+					"when": "false"
+				},
+				{
+					"command": "read-urls.copyForReverseLazy",
+					"when": "false"
+				}
+			],
 			"view/title": [
 				{
 					"command": "read-urls.refresh",
