@@ -4,7 +4,7 @@ const vscode = require('vscode');
 /** 
  * @param {string} stringToRead
  * @param {string} braceToRead
- * @returns {string[]}
+ * @returns {string[]} subtrings with the requested brace
 */
 function bracketReader (stringToRead, braceToRead, filePath) {
     /* 
@@ -24,6 +24,9 @@ function bracketReader (stringToRead, braceToRead, filePath) {
     if (partnerBrace === undefined) {
         throw TypeError(`${braceToRead} is not supported`);
     }
+
+    // remove all commented out parts! They're useless!!
+    stringToRead = stringToRead.replace(/""".*?"""/sg, '').replace(/#.*?\n/sg, '');
 
     const bracePositions = [];
     const stringToReadAsList = [...stringToRead];

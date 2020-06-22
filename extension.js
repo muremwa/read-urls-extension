@@ -25,6 +25,10 @@ function addToClipBoard (stringToAdd) {
  * @returns {void}
 */
 function getReverseUrl (treeItem, lazy = false) {
+	if (treeItem === undefined) {
+		vscode.window.showInformationMessage('No url selected');
+	};
+
 	const reverseType = lazy? "reverse_lazy": "reverse";
 	// get the reverse name
 	const reverseName = treeItem.fullLabel;
@@ -46,6 +50,7 @@ function getReverseUrl (treeItem, lazy = false) {
 };
 
 
+// do all the work !!!
 function readAndDisplayUrls () {
 	// retrieve all urls using reader by passing in workspace path
 	const urlPatterns = reader.reader(vscode.workspace.rootPath);
@@ -96,7 +101,7 @@ function readAndDisplayUrls () {
 /**
  * @param {vscode.ExtensionContext} context
  */
-function activate(context) {
+function activate() {
 	// read and display every url
 	readAndDisplayUrls();
 
@@ -105,6 +110,10 @@ function activate(context) {
 
 	// copy for template
 	vscode.commands.registerCommand('read-urls.copyForTemplate', function (treeItem) {
+		if (treeItem === undefined) {
+			vscode.window.showInformationMessage('No url selected');
+		};
+		
 		const reverseName = treeItem.fullLabel;
 		// extract args from children
 		let args = treeItem.children.map((child) => child.fullLabel.split(' -> ')[0]);
