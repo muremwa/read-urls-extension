@@ -1,7 +1,8 @@
 # Django Urls Reader.
 Reads all urls declared in a Django project.
 
-Gives the option of copying the url as reverse, reverse_lazy or as a template tag.
+Gives the option of copying the url as reverse, reverse_lazy or as a template tag.  
+Install from [here](https://marketplace.visualstudio.com/items?itemName=muremwa.read-urls)
 
 ## Usage.
 The extension adds a view on your side bar with the. Navigate to that view and click to open it and 
