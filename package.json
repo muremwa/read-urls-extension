@@ -20,32 +20,32 @@
 				"command": "read-urls.refresh",
 				"title": "Refresh",
 				"icon": {
-					"light": "media/refresh.png",
-					"dark": "media/refresh.png"
+					"light": "media/refresh_light.png",
+					"dark": "media/refresh_dark.png"
 				}
 			},
 			{
 				"command": "read-urls.copyForTemplate",
 				"title": "Copy for template",
 				"icon": {
-					"light": "media/copy.png",
-					"dark": "media/copy.png"
+					"light": "media/copy_light.png",
+					"dark": "media/copy_dark.png"
 				}
 			},
 			{
 				"command": "read-urls.copyForReverse",
 				"title": "Copy for reverse",
 				"icon": {
-					"light": "media/copy.png",
-					"dark": "media/copy.png"
+					"light": "media/copy_light.png",
+					"dark": "media/copy_dark.png"
 				}
 			},
 			{
 				"command": "read-urls.copyForReverseLazy",
 				"title": "Copy for reverse lazy",
 				"icon": {
-					"light": "media/copy.png",
-					"dark": "media/copy.png"
+					"light": "media/copy_light.png",
+					"dark": "media/copy_dark.png"
 				}
 			}
 		],

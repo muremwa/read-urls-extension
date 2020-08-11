@@ -124,7 +124,7 @@ function activate() {
 		// // copy reverse lazy
 		vscode.commands.registerCommand('read-urls.copyForReverseLazy', (treeItem) => getReverseUrl(treeItem, true));
 	} else {
-		vscode.window.showInformationMessage('Open a Django project to use');
+		vscode.window.showInformationMessage('Open a Django project to use the extension');
 	}
 };
 exports.activate = activate;
