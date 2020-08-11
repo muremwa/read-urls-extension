@@ -50,50 +50,35 @@ function getReverseUrl (treeItem, lazy = false) {
 };
 
 
-// do all the work !!!
+/* 
+	Read all urls and plant the tree
+*/
 function readAndDisplayUrls () {
 	// retrieve all urls using reader by passing in workspace path
-	const urlPatterns = reader.reader(vscode.workspace.rootPath);
+	const urlPatterns = reader.mainReader(vscode.workspace.rootPath);
 
 	// this shall contain all TreeItems to show
-	const ultimatePatterns = [];
+	const urlTreeItems = [];
 
-	// loop through all discovered patterns create TreeItems
-	Object.keys(urlPatterns).forEach((key) => {
-		// filter out patterns with no reverse name
-		let patterns = urlPatterns[key].filter((item) => ![null, undefined].includes(item[0]));
-		
-		// create all TreeItems for each app
-		let items = patterns.map((patternItems) => {
-			let name = patternItems[0];
-			let args = patternItems[1];
+	// loop through all patterns and create tree items
+	console.log('loop through the map')
+	for (const app of urlPatterns.keys()) {
+		const appUrlPatterns = urlPatterns.get(app);
 
-			// ensure args are not null
-			if (!Array.isArray(args) || args === undefined || args === null) {
-				args = [];
-			};
-
-			args = args.filter((arg) => arg !== null || arg !== undefined);
-
-
-			// map an arg to a tree item
-			args = args.map((arg) => {
-				let argType = arg[1] === null? 'type_undecleared': `${arg[1]}`;
-				return new provider.TreeItem(`${arg[0]} -> ${argType}`, [], false, [], name, true);
-			})
-
-			return new provider.TreeItem(name, args, false, [], key, false);
+		// create urlConfig children
+		const appUrlConfigs = appUrlPatterns.map((appUrlPattern) => {
+			// url config arguments
+			const urlArgs = appUrlPattern.arguments.map((arg) => new provider.TreeItem(`${arg.name}=${arg.argType}`, provider.trees.ARGUMENT));
+			return new provider.TreeItem(appUrlPattern.reverseName, provider.trees.URL, urlArgs);
 		});
+		
+		// add app
+		urlTreeItems.push(
+			new provider.TreeItem(app, provider.trees.APP, appUrlConfigs)
+		);		
+	};
 
-		if (items.length > 0) {
-			// add each app TreeItem with it's accompanying urls TreeItem(s)
-			ultimatePatterns.push(
-				new provider.TreeItem(key, items, true)
-			);
-		};
-	});
-
-	vscode.window.registerTreeDataProvider('project-urls', new provider.TreeDataProvider(ultimatePatterns));
+	vscode.window.registerTreeDataProvider('project-urls', new provider.TreeDataProvider(urlTreeItems));
 	
 };
 
@@ -105,37 +90,37 @@ function activate() {
 	// read and display every url
 	readAndDisplayUrls();
 
-	// Refresh button
-	vscode.commands.registerCommand('read-urls.refresh', () => readAndDisplayUrls());
+	// // Refresh button
+	// vscode.commands.registerCommand('read-urls.refresh', () => readAndDisplayUrls());
 
-	// copy for template
-	vscode.commands.registerCommand('read-urls.copyForTemplate', function (treeItem) {
-		if (treeItem === undefined) {
-			vscode.window.showInformationMessage('No url selected');
-		};
+	// // copy for template
+	// vscode.commands.registerCommand('read-urls.copyForTemplate', function (treeItem) {
+	// 	if (treeItem === undefined) {
+	// 		vscode.window.showInformationMessage('No url selected');
+	// 	};
 		
-		const reverseName = treeItem.fullLabel;
-		// extract args from children
-		let args = treeItem.children.map((child) => child.fullLabel.split(' -> ')[0]);
+	// 	const reverseName = treeItem.fullLabel;
+	// 	// extract args from children
+	// 	let args = treeItem.children.map((child) => child.fullLabel.split(' -> ')[0]);
 		
-		// map the children to the right string representation
-		args = args.map((arg) => `%${arg}%`);
+	// 	// map the children to the right string representation
+	// 	args = args.map((arg) => `%${arg}%`);
 		
-		// get kwargs from args
-		args = args.length > 0? `${args.join(' ')}`: '';
+	// 	// get kwargs from args
+	// 	args = args.length > 0? `${args.join(' ')}`: '';
 
-		const templateUrl = `{% url '${reverseName}' ${args === ''? '': `${args} `}%}`;
+	// 	const templateUrl = `{% url '${reverseName}' ${args === ''? '': `${args} `}%}`;
 
-		addToClipBoard(templateUrl);
+	// 	addToClipBoard(templateUrl);
 
-		vscode.window.showInformationMessage('Copied url template tag to clipboard');
-	});
+	// 	vscode.window.showInformationMessage('Copied url template tag to clipboard');
+	// });
 
 	// copy for reverse
-	vscode.commands.registerCommand('read-urls.copyForReverse', (treeItem) => getReverseUrl(treeItem));
+	// vscode.commands.registerCommand('read-urls.copyForReverse', (treeItem) => getReverseUrl(treeItem));
 
-	// copy reverse lazy
-	vscode.commands.registerCommand('read-urls.copyForReverseLazy', (treeItem) => getReverseUrl(treeItem, true));
+	// // copy reverse lazy
+	// vscode.commands.registerCommand('read-urls.copyForReverseLazy', (treeItem) => getReverseUrl(treeItem, true));
 
 };
 exports.activate = activate;

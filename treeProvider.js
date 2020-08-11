@@ -1,4 +1,9 @@
 const vscode = require('vscode');
+const trees = {
+    APP: 0,
+    URL: 1,
+    ARGUMENT: 2    
+};
 
 
 class TreeDataProvider {
@@ -20,95 +25,61 @@ class TreeDataProvider {
 };
 
 
-
 class TreeItem extends vscode.TreeItem {
-    constructor(label, children, isAppName = false, args = [], parent = null, isArgs = false) {
-        // clean app name for urls
-        const labelCleaner = (fullLabel) => {
-            let name = fullLabel;
-            if (isArgs) {
-                let tempName = fullLabel.split(' -> ');
-                name = `${tempName[0]} <${tempName[1]}>`;
+ 
+    constructor (label, treeType, children) {
+        let collapsedTreeOrNot, labelToFeed, contextValue, tooltip;
+
+        if (treeType === trees.APP) {
+            collapsedTreeOrNot = vscode.TreeItemCollapsibleState.Expanded;
+            contextValue = 'app';
+            
+            if (label.includes('READER_FILE_PATH')) {
+                const _tempLabel = label.split('\\');
+                labelToFeed = _tempLabel.splice(_tempLabel.length - 2, 2).join('\\');
             } else {
-                let tempName = fullLabel.split(':');
-                if (!['', undefined, null].includes(tempName[1])) {
-                    name = tempName[1]
-                };
-            }
-            return name;
-        };
-
-        // clean the display name for an app_name
-        const readerPathCleaner = (fullLabel)  => {
-            let name = fullLabel;
-
-            if (fullLabel.includes('READER_FILE_PATH')) {
-                let tempName = fullLabel.split('\\');
-                name = tempName.splice(tempName.length - 2, 2).join('\\');
-            }
-
-            return name.toUpperCase();
-        };
-
-
-        // a url name should be collapsed while a app_name is expanded
-        const collapsedTreeOrNot = (() => {
-            if (isAppName) {
-                return vscode.TreeItemCollapsibleState.Expanded;
-            } else {
-                return vscode.TreeItemCollapsibleState.Collapsed;
-            }
-        })();
-
-        // used get the correct name to display
-        const labelToFeed = isAppName? readerPathCleaner(label): labelCleaner(label);
+                labelToFeed = label;
+            };
+            labelToFeed = labelToFeed.toUpperCase();
+            tooltip = `App called ${labelToFeed}`;
         
+        } else if (treeType === trees.URL) {
+            collapsedTreeOrNot = vscode.TreeItemCollapsibleState.Collapsed;
+            contextValue = 'urlName';
+            const _tempLabel = label.split(':');
+
+            if (_tempLabel.length === 1) {
+                labelToFeed = _tempLabel[0];
+            } else if (_tempLabel.length === 2) {
+                labelToFeed = _tempLabel[1];
+            } else {
+                labelToFeed = label;
+            };
+            tooltip = `url config named ${labelToFeed}`;
+
+        } else if (treeType === trees.ARGUMENT) {
+            contextValue = 'args';
+            const _tempLabel = label.split('=');
+            const typeName = _tempLabel[1] === 'NULL'? 'Type undeclared': _tempLabel[1];
+            labelToFeed = `${_tempLabel[0]} <${typeName}>`;
+            tooltip = 'url config argument';
+        };
+
 
         super(labelToFeed, children === undefined || children.length === 0 ? vscode.TreeItemCollapsibleState.None : collapsedTreeOrNot);
-		this.children = children;
-        this.isAppName = isAppName;
-        this.fullLabel = label;
-        this.urlArguments = args;
-        this.parent = parent;
-        this.contextValue = (() => {
-            if (isAppName) {
-                return 'app';
-            } else if (isArgs) {
-                return 'args';
-            } else {
-                return 'urlName';
-            };
-        })();
-        this.tooltip = this.getToolTip();
+        this.children = children;
+        this.ogLabel = label;
+        this.contextValue = contextValue;
+        this.tooltip = tooltip;
     };
 
-    getToolTip () {
-        let tip;
-        if (this.contextValue === 'app'){
-            if (this.fullLabel.includes('READER_FILE_PATH')) {
-                tip = `App found in ${this.label}`;
-            } else {
-                tip = `App called ${this.label}`;
-            };
-        } else if (this.contextValue === 'urlName') {
-            tip = `url named ${this.label}`;
-        } else if (this.contextValue === 'args') {
-            let splitLabel = this.fullLabel.split(' -> ');
-            let type = splitLabel[1] === 'type_undecleared'? 'undeclared': splitLabel[1];
-            tip = `Url argument of ${type} type`;
-        }
-        return tip;
-    }
-
-
-    
-    
 };
 
 
 module.exports = {
     TreeDataProvider,
-    TreeItem
+    TreeItem,
+    trees
 };
 
 
