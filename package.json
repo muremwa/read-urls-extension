@@ -1,8 +1,8 @@
 {
 	"name": "read-urls",
 	"displayName": "django-urls-reader",
-	"description": "",
-	"version": "0.0.1",
+	"description": "Read a django project URL configurations.",
+	"version": "1.0.0",
 	"publisher": "muremwa",
 	"engines": {
 		"vscode": "^1.45.0"
@@ -71,7 +71,8 @@
 			"view/title": [
 				{
 					"command": "read-urls.refresh",
-					"group": "navigation"
+					"group": "navigation",
+					"when": "view == project-urls"
 				}
 			],
 			"view/item/context": [
@@ -105,16 +106,16 @@
 			"django-urls": [
 				{
 					"id": "project-urls",
-					"name": "Detected urls",
+					"name": "Detected configurations",
 					"icon": "media/icons.svg",
-					"contextualTitle": "Urls Explorer"
+					"contextualTitle": "config-explorer"
 				}
 			]
 		},
 		"viewsWelcome": [
 			{
 				"view": "project-urls",
-				"contents": "No URLs Detected. \n Read the django documentation on [urls](https://muremwa.pythonanywhere.com/blog/django-read-urls-extension)"
+				"contents": "No URL configurations Detected. \n Read the django documentation on [urls](https://docs.djangoproject.com/urls)"
 			}
 		]
 	},
@@ -138,7 +139,7 @@
 		"clipboardy": "^2.3.0",
 		"walk": "^2.3.14"
 	},
-	"preview": true,
+	"preview": false,
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/muremwa/read-urls-extension"
