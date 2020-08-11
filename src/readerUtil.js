@@ -13,7 +13,7 @@ const patnerBraces = new Map([
     [exports.brackets.CURLY_BRACKET, '}'],
     [exports.brackets.ANGLE_BRACKET, '>']
 ]);
-function bracketReader(stringToRead, braceToRead, closingBraceNotFound) {
+function bracketReader(stringToRead, braceToRead, filePath, closingBraceNotFound) {
     /*
     get to know where a bracket starts and is successfully closed
     */
@@ -70,7 +70,7 @@ function bracketReader(stringToRead, braceToRead, closingBraceNotFound) {
         // if it does not close raise a value error
         if (openingBraceCount) {
             if (closingBraceNotFound) {
-                closingBraceNotFound(partnerBrace);
+                closingBraceNotFound(partnerBrace, filePath);
                 break;
             }
             else {

@@ -58,8 +58,9 @@ function readAndDisplayUrls () {
 		if (isNotProject) {
 			vscode.window.showInformationMessage('This is not a django project');
 		};
-	}, (brace) => {
-		vscode.window.showInformationMessage(`A file is missing '${brace}'`);
+	}, (brace, file) => {
+		const smallFileName = file.split('\\');
+		vscode.window.showInformationMessage(`${smallFileName.splice(smallFileName.length - 2, 2).join('\\')} is missing '${brace}'`);
 	});
 
 	// this shall contain all TreeItems to show

@@ -123,10 +123,10 @@ function urlsFinder(urlsFileText, filePath, braceError) {
     }
     ;
     // extract urls patterns first? they are enclosed in a list
-    const urlPatterns = readerUtil_1.bracketReader(urlsFileText, readerUtil_1.brackets.SQUARE_BRACKET, braceError);
+    const urlPatterns = readerUtil_1.bracketReader(urlsFileText, readerUtil_1.brackets.SQUARE_BRACKET, filePath, braceError);
     // extract url pattens
     for (let urlPatternList of urlPatterns) {
-        urls.push(...readerUtil_1.bracketReader(urlPatternList, readerUtil_1.brackets.ROUND_BRACKET, braceError));
+        urls.push(...readerUtil_1.bracketReader(urlPatternList, readerUtil_1.brackets.ROUND_BRACKET, filePath, braceError));
     }
     ;
     return { appName, urls };
