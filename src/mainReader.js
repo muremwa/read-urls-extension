@@ -74,7 +74,7 @@ function walkProject(projectSourcePath, notDjangoProjectHandler) {
     return urls;
 }
 ;
-function mainReader(path, notDjangoProjectHandler) {
+function mainReader(path, notDjangoProjectHandler, braceError) {
     /*
         path is a project path
         read all urls and return a Map with the following items
@@ -106,7 +106,7 @@ function mainReader(path, notDjangoProjectHandler) {
     // loop through all url config files and extract all urls and process them
     for (const urlDotPy of urlConfFiles) {
         const urlDotPyText = fs_1.readFileSync(urlDotPy, { encoding: 'utf-8', flag: 'r' });
-        const dirtyUrls = urlsReader_1.urlsFinder(urlDotPyText, urlDotPy);
+        const dirtyUrls = urlsReader_1.urlsFinder(urlDotPyText, urlDotPy, braceError);
         if (dirtyUrls.urls.length > 0) {
             const processedUrls = [...dirtyUrls.urls].map((url) => urlsReader_1.urlProcessor(url, dirtyUrls.appName)).filter((url) => url !== null);
             if (processedUrls.length > 0) {

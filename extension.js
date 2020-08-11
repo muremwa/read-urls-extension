@@ -55,13 +55,18 @@ function getReverseUrl (treeItem, lazy = false) {
 */
 function readAndDisplayUrls () {
 	// retrieve all urls using reader by passing in workspace path
-	const urlPatterns = reader.mainReader(vscode.workspace.rootPath);
+	const urlPatterns = reader.mainReader(vscode.workspace.rootPath, (isNotProject) => {
+		if (isNotProject) {
+			vscode.window.showInformationMessage('This is not a django project');
+		};
+	}, (brace) => {
+		vscode.window.showInformationMessage(`A file is missing '${brace}'`);
+	});
 
 	// this shall contain all TreeItems to show
 	const urlTreeItems = [];
 
 	// loop through all patterns and create tree items
-	console.log('loop through the map')
 	for (const app of urlPatterns.keys()) {
 		const appUrlPatterns = urlPatterns.get(app);
 
@@ -87,41 +92,44 @@ function readAndDisplayUrls () {
  * @param {vscode.ExtensionContext} context
  */
 function activate() {
-	// read and display every url
-	readAndDisplayUrls();
+	if (vscode.workspace.rootPath) {
+		// read and display every url
+		readAndDisplayUrls();
 
-	// // Refresh button
-	// vscode.commands.registerCommand('read-urls.refresh', () => readAndDisplayUrls());
+		// Refresh button
+		vscode.commands.registerCommand('read-urls.refresh', () => readAndDisplayUrls());
 
-	// // copy for template
-	// vscode.commands.registerCommand('read-urls.copyForTemplate', function (treeItem) {
-	// 	if (treeItem === undefined) {
-	// 		vscode.window.showInformationMessage('No url selected');
-	// 	};
-		
-	// 	const reverseName = treeItem.fullLabel;
-	// 	// extract args from children
-	// 	let args = treeItem.children.map((child) => child.fullLabel.split(' -> ')[0]);
-		
-	// 	// map the children to the right string representation
-	// 	args = args.map((arg) => `%${arg}%`);
-		
-	// 	// get kwargs from args
-	// 	args = args.length > 0? `${args.join(' ')}`: '';
+		// // copy for template
+		// vscode.commands.registerCommand('read-urls.copyForTemplate', function (treeItem) {
+		// 	if (treeItem === undefined) {
+		// 		vscode.window.showInformationMessage('No url selected');
+		// 	};
+			
+		// 	const reverseName = treeItem.fullLabel;
+		// 	// extract args from children
+		// 	let args = treeItem.children.map((child) => child.fullLabel.split(' -> ')[0]);
+			
+		// 	// map the children to the right string representation
+		// 	args = args.map((arg) => `%${arg}%`);
+			
+		// 	// get kwargs from args
+		// 	args = args.length > 0? `${args.join(' ')}`: '';
 
-	// 	const templateUrl = `{% url '${reverseName}' ${args === ''? '': `${args} `}%}`;
+		// 	const templateUrl = `{% url '${reverseName}' ${args === ''? '': `${args} `}%}`;
 
-	// 	addToClipBoard(templateUrl);
+		// 	addToClipBoard(templateUrl);
 
-	// 	vscode.window.showInformationMessage('Copied url template tag to clipboard');
-	// });
+		// 	vscode.window.showInformationMessage('Copied url template tag to clipboard');
+		// });
 
-	// copy for reverse
-	// vscode.commands.registerCommand('read-urls.copyForReverse', (treeItem) => getReverseUrl(treeItem));
+		// copy for reverse
+		// vscode.commands.registerCommand('read-urls.copyForReverse', (treeItem) => getReverseUrl(treeItem));
 
-	// // copy reverse lazy
-	// vscode.commands.registerCommand('read-urls.copyForReverseLazy', (treeItem) => getReverseUrl(treeItem, true));
-
+		// // copy reverse lazy
+		// vscode.commands.registerCommand('read-urls.copyForReverseLazy', (treeItem) => getReverseUrl(treeItem, true));
+	} else {
+		vscode.window.showInformationMessage('Open a Django project to use');
+	}
 };
 exports.activate = activate;
 

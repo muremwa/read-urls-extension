@@ -100,7 +100,7 @@ function urlProcessor(urlString, appName) {
 }
 exports.urlProcessor = urlProcessor;
 ;
-function urlsFinder(urlsFileText, filePath) {
+function urlsFinder(urlsFileText, filePath, braceError) {
     /*
         get a urls.py file text and extract 'app_name' and all urls
         {
@@ -123,10 +123,10 @@ function urlsFinder(urlsFileText, filePath) {
     }
     ;
     // extract urls patterns first? they are enclosed in a list
-    const urlPatterns = readerUtil_1.bracketReader(urlsFileText, readerUtil_1.brackets.SQUARE_BRACKET);
+    const urlPatterns = readerUtil_1.bracketReader(urlsFileText, readerUtil_1.brackets.SQUARE_BRACKET, braceError);
     // extract url pattens
     for (let urlPatternList of urlPatterns) {
-        urls.push(...readerUtil_1.bracketReader(urlPatternList, readerUtil_1.brackets.ROUND_BRACKET));
+        urls.push(...readerUtil_1.bracketReader(urlPatternList, readerUtil_1.brackets.ROUND_BRACKET, braceError));
     }
     ;
     return { appName, urls };
