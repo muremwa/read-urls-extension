@@ -3,6 +3,7 @@
 	"displayName": "django-urls-reader",
 	"description": "",
 	"version": "0.0.1",
+	"publisher": "muremwa",
 	"engines": {
 		"vscode": "^1.45.0"
 	},
@@ -136,5 +137,10 @@
 	"dependencies": {
 		"clipboardy": "^2.3.0",
 		"walk": "^2.3.14"
+	},
+	"preview": true,
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/muremwa/read-urls-extension"
 	}
 }
