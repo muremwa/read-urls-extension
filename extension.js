@@ -31,15 +31,14 @@ function getReverseUrl (treeItem, lazy = false) {
 
 	const reverseType = lazy? "reverse_lazy": "reverse";
 	// get the reverse name
-	const reverseName = treeItem.fullLabel;
-	// extract args from children
-	let args = treeItem.children.map((child) => child.fullLabel.split(' -> ')[0]);
+	const reverseName = treeItem.ogLabel;
 
-	// map the children to the right string representation
-	args = args.map((arg) => `"${arg}": str(%${arg}%)`);
+	const simpleArgs = treeItem.children.map((arg) => {
+		const _arg = arg.ogLabel.split('=')[0];
+		return `"${_arg}": str(%${_arg}%)`;
+	});
 
-	// get kwargs from args
-	args = args.length > 0? `, kwargs={${args.join(', ')}}`: '';
+	const args = simpleArgs.length > 0? `, kwargs={${simpleArgs.join(', ')}}`: '';
 
 	// generate the reverse function
 	const reverseUrl = `${reverseType}("${reverseName}"${args})`
@@ -99,34 +98,31 @@ function activate() {
 		// Refresh button
 		vscode.commands.registerCommand('read-urls.refresh', () => readAndDisplayUrls());
 
-		// // copy for template
-		// vscode.commands.registerCommand('read-urls.copyForTemplate', function (treeItem) {
-		// 	if (treeItem === undefined) {
-		// 		vscode.window.showInformationMessage('No url selected');
-		// 	};
+		// copy for template
+		vscode.commands.registerCommand('read-urls.copyForTemplate', function (treeItem) {
+			if (treeItem === undefined) {
+				vscode.window.showInformationMessage('No url selected');
+			};
 			
-		// 	const reverseName = treeItem.fullLabel;
-		// 	// extract args from children
-		// 	let args = treeItem.children.map((child) => child.fullLabel.split(' -> ')[0]);
-			
-		// 	// map the children to the right string representation
-		// 	args = args.map((arg) => `%${arg}%`);
-			
-		// 	// get kwargs from args
-		// 	args = args.length > 0? `${args.join(' ')}`: '';
+			const reverseName = treeItem.ogLabel;
 
-		// 	const templateUrl = `{% url '${reverseName}' ${args === ''? '': `${args} `}%}`;
+			const args = treeItem.children.map((arg) => {
+				const _arg = arg.ogLabel.split('=')[0];
+				return `%${_arg}%`;
+			}).join(' ');
 
-		// 	addToClipBoard(templateUrl);
+			const templateUrl = `{% url '${reverseName}' ${args === ''? '': `${args} `}%}`;
 
-		// 	vscode.window.showInformationMessage('Copied url template tag to clipboard');
-		// });
+			addToClipBoard(templateUrl);
+
+			vscode.window.showInformationMessage('Copied url template tag to clipboard');
+		});
 
 		// copy for reverse
-		// vscode.commands.registerCommand('read-urls.copyForReverse', (treeItem) => getReverseUrl(treeItem));
+		vscode.commands.registerCommand('read-urls.copyForReverse', (treeItem) => getReverseUrl(treeItem));
 
 		// // copy reverse lazy
-		// vscode.commands.registerCommand('read-urls.copyForReverseLazy', (treeItem) => getReverseUrl(treeItem, true));
+		vscode.commands.registerCommand('read-urls.copyForReverseLazy', (treeItem) => getReverseUrl(treeItem, true));
 	} else {
 		vscode.window.showInformationMessage('Open a Django project to use');
 	}
