@@ -1,5 +1,5 @@
-# Django Urls Reader.
-Reads all urls declared in a Django project.
+# Django Urls configurations Reader.
+Reads all urls configurations declared in a Django project.
 
 Gives the option of copying the url as reverse, reverse_lazy or as a template tag.
 
@@ -22,7 +22,7 @@ If not the it's a single item.
 - - -
 
 ## Actions.
-On hovering over a url name, there are three button __(from left to right)__.  
+On hovering over a url name, there are three buttons __(from left to right)__.  
 1. Copy 'reverse' url.
 2. Copy 'reverse_lazy' url.
 3. Copy as a template tag.
