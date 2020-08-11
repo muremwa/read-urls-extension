@@ -4,6 +4,7 @@
 	"description": "Read a django project URL configurations.",
 	"version": "1.0.0",
 	"publisher": "muremwa",
+	"icon": "media/ex_icon.png",
 	"engines": {
 		"vscode": "^1.45.0"
 	},
