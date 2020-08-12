@@ -111,6 +111,8 @@ function urlsFinder(urlsFileText, filePath, braceError) {
             ]
         }
     */
+    // remove commented out lines from the urlsFileText
+    urlsFileText = urlsFileText.replace(/""".*?"""/sg, '').replace(/#.*?\n/sg, '');
     let appName = `READER_FILE_PATH_${filePath}`;
     let urls = [];
     // reg ex for app name
