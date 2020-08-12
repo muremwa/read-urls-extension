@@ -10,3 +10,7 @@
 - Simplfied the tree structure.
 - Changed icons for light theme.
 - Fixed a bug that caused the refresh icon to appear in places it's not meant.
+  
+## [1.0.1] - 2020-08-11
+### Fixed
+- Commented out urls are not shown.
