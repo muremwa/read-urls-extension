@@ -31,7 +31,7 @@ class TreeItem extends vscode.TreeItem {
         let collapsedTreeOrNot, labelToFeed, contextValue, tooltip;
 
         if (treeType === trees.APP) {
-            collapsedTreeOrNot = vscode.TreeItemCollapsibleState.Expanded;
+            collapsedTreeOrNot = label === 'admin'? vscode.TreeItemCollapsibleState.Collapsed: vscode.TreeItemCollapsibleState.Expanded;
             contextValue = 'app';
             
             if (label.includes('READER_FILE_PATH')) {
