@@ -1,0 +1,80 @@
+[
+    {
+        "appName": "admin",
+        "urls": [
+            {
+                "reverseName": "admin:index",
+                "arguments": [],
+                "viewName": "",
+                "hasArgs": false
+            },
+            {
+                "reverseName": "admin:login",
+                "arguments": [],
+                "viewName": "",
+                "hasArgs": false
+            },
+            {
+                "reverseName": "admin:logout",
+                "arguments": [],
+                "viewName": "",
+                "hasArgs": false
+            },
+            {
+                "reverseName": "admin:password_change",
+                "arguments": [],
+                "viewName": "",
+                "hasArgs": false
+            },
+            {
+                "reverseName": "admin:password_change_done",
+                "arguments": [],
+                "viewName": "",
+                "hasArgs": false
+            },
+            {
+                "reverseName": "admin:jsi18n",
+                "arguments": [],
+                "viewName": "",
+                "hasArgs": false
+            },
+            {
+                "reverseName": "admin:app_list",
+                "arguments": [
+                    {
+                        "name": "app_label",
+                        "argType": "string"
+                    }
+                ],
+                "viewName": "",
+                "hasArgs": true
+            },
+            {
+                "reverseName": "admin:view_on_site",
+                "arguments": [
+                    {
+                        "name": "content_type_id",
+                        "argType": "integer"
+                    },
+                    {
+                        "name": "object_id",
+                        "argType": "integer"
+                    }
+                ],
+                "viewName": "",
+                "hasArgs": true
+            },
+            {
+                "reverseName": "admin:auth_user_password_change",
+                "arguments": [
+                    {
+                        "name": "user_id",
+                        "argType": "integer"
+                    }
+                ],
+                "viewName": "",
+                "hasArgs": true
+            }
+        ]
+    }
+]
