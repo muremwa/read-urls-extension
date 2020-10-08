@@ -3,6 +3,7 @@
 const vscode = require('vscode');
 const reader = require('./src/mainReader');
 const provider = require('./treeProvider');
+const externalUrls = require('./extraUrls').loadUrls;
 const clipboard = require('clipboardy');
 
 
@@ -63,12 +64,21 @@ function readAndDisplayUrls () {
 		vscode.window.showInformationMessage(`${smallFileName.splice(smallFileName.length - 2, 2).join('\\')} is missing '${brace}'`);
 	});
 
+	// load pre defined url configurations
+	const extraUrlPatterns = externalUrls(vscode.workspace.rootPath, (error, file) => {
+		vscode.window.showErrorMessage(`The configurations in ${file} are incorrect`);
+	});
+
+	// merge both patterns
+	const mergedPatterns = [...extraUrlPatterns.keys()].length? new Map([...extraUrlPatterns, ...urlPatterns]): urlPatterns;
+
+
 	// this shall contain all TreeItems to show
 	const urlTreeItems = [];
 
 	// loop through all patterns and create tree items
-	for (const app of urlPatterns.keys()) {
-		const appUrlPatterns = urlPatterns.get(app);
+	for (const app of mergedPatterns.keys()) {
+		const appUrlPatterns = mergedPatterns.get(app);
 
 		// create urlConfig children
 		const appUrlConfigs = appUrlPatterns.map((appUrlPattern) => {
@@ -76,11 +86,11 @@ function readAndDisplayUrls () {
 			const urlArgs = appUrlPattern.arguments.map((arg) => new provider.TreeItem(`${arg.name}=${arg.argType}`, provider.trees.ARGUMENT));
 			return new provider.TreeItem(appUrlPattern.reverseName, provider.trees.URL, urlArgs);
 		});
-		
+
 		// add app
 		urlTreeItems.push(
 			new provider.TreeItem(app, provider.trees.APP, appUrlConfigs)
-		);		
+		);
 	};
 
 	vscode.window.registerTreeDataProvider('project-urls', new provider.TreeDataProvider(urlTreeItems));
