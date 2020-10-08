@@ -7,6 +7,7 @@ Jump to:
 • [Usage](#usage).  
 • [Custom Url configurations](#custom-url-configurations).  
 • [Creating Custom Url configurations](#creating-custom-configurations).  
+• [Using `ModelAdmin` urls](#modeladmin-urls).  
 
 - - - 
 
@@ -66,6 +67,9 @@ Each app entry, in the array of apps, is an object with two properties:
 
       4. `hasArgs` __[Boolean]__: `false` if `arguments` / entry 2 above is empty and vice versa.
 
+
+To load changes click the reload button.
+
 - - -
 ### Example in a `*.conf.json` file:
 ```JSON
@@ -112,6 +116,21 @@ Each app entry, in the array of apps, is an object with two properties:
 
 > Incase of incorrect configurations, the file is ignored.  
 > [Check out the admin configurations file🧐.](extraUrls/admin.conf.json)
+
+- - - 
+## `ModelAdmin` URLs.
+To use your admin models URL, add an object in `.vscode/urlConfigs/models.json` with properties as app_labels _(peak into `apps.py`)_ and a list of model names. 
+
+To load changes click the reload button.
+
+_Changes to detect models automatically are in development._
+```JSON
+    {
+        "app_label": ["model1", "model2"],
+        "app_label_2": ["model3"]
+    }
+```
+- - -
 
 ## MISC
 Created by [Muremwa](https://github.com/muremwa/).  
