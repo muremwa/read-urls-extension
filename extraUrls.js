@@ -4,6 +4,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const modelAdmin = require('./modelAdminLoad').modelAdmin;
 const EXTRAURLS = 'extraUrls'
 const isObj = (obj) => typeof obj === 'object' && obj !== null;
 
@@ -13,7 +14,7 @@ function _loadExtraUrls (files, errorCallBack) {
 
     files.forEach((file) => {
         if (file.match(/\.conf\.json/g)) {
-            const configs = fs.readFileSync(file);
+            const configs = fs.readFileSync(file, { encoding: 'utf-8', flag: 'r' });
             
             try {
                 const parsedconfigs = JSON.parse(configs);
@@ -58,7 +59,7 @@ function _loadExtraUrls (files, errorCallBack) {
  * @param {string} home
  * @returns {Map<string, []>}
  */
-function loadUrls (home, handleExternalReadError) {
+function loadUrls (home, handleExternalReadError, wrongFormatModels) {
     // Read json files in extraUrls
     let userConfigs;
 
@@ -73,7 +74,14 @@ function loadUrls (home, handleExternalReadError) {
         ...userConfigs
     ];
 
-    return _loadExtraUrls(jFiles, handleExternalReadError);
+    const urls = _loadExtraUrls(jFiles, handleExternalReadError);
+
+    if (urls.has('admin')) {
+        const modelUrls = modelAdmin(home, wrongFormatModels, () => {});
+        urls.set('admin', [...urls.get('admin'), ...modelUrls]);
+    };
+
+    return urls;
 
 };
 

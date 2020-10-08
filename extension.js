@@ -67,6 +67,8 @@ function readAndDisplayUrls () {
 	// load pre defined url configurations
 	const extraUrlPatterns = externalUrls(vscode.workspace.rootPath, (error, file) => {
 		vscode.window.showErrorMessage(`The configurations in ${file} are incorrect`);
+	}, () => {
+		vscode.window.showErrorMessage('Wrong formart on .vscode/urlConfigs/models.json')
 	});
 
 	// merge both patterns
