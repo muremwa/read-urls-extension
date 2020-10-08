@@ -14,3 +14,9 @@
 ## [1.0.1] - 2020-08-11
 ### Fixed
 - Commented out urls are not shown.
+
+
+## [1.1.0] - 2020-10-11
+### Added
+- You can now add custom URL configurations eg. for 3rd party apps.
+- Added the admin site URL configurations.
