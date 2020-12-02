@@ -20,3 +20,10 @@
 ### Added
 - You can now add custom URL configurations eg. for 3rd party apps.
 - Added the admin site URL configurations.
+
+## [1.1.1] - 2020-12-02
+
+### Fixed
+- Removed Admin URL configs when the project is not a Django one. [Issue here](https://github.com/muremwa/read-urls-extension/issues/3).
+- Tooltips changed.
+- `vscode.workspace.rootPath` is depracated, updated to `vscode.workspace.workspaceFolders`.

@@ -1,7 +1,7 @@
 # Django Urls configurations Reader.
-Reads all urls configurations declared in a Django project.
+Reads all urls configurations declared in a Django project and copy to clipboard.  
 
-Gives the option of copying the url as reverse, reverse_lazy or as a template tag.  
+Gives the option of copying the url as __reverse__, __reverse_lazy__ or as a __template tag__ to your __clipboard__.  
 Install from [here](https://marketplace.visualstudio.com/items?itemName=muremwa.read-urls).  
 Jump to:  
 • [Usage](#usage).  
@@ -11,7 +11,7 @@ Jump to:
 
 - - - 
 
-## Usage.
+## Usage.  
 The extension adds a view on your side bar with the. Navigate to that view and click to open it and 
 activate the extension.  
 
@@ -133,5 +133,6 @@ _Changes to detect models automatically are in development._
 - - -
 
 ## MISC
-Created by [Muremwa](https://github.com/muremwa/).  
-Released under the [MIT License](LICENSE).
+• Created by [Muremwa](https://github.com/muremwa/).  
+• Copying to clipboard made possible by [clipboardy](https://github.com/sindresorhus/clipboardy).  
+• Released under the [MIT License](LICENSE).
