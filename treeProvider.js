@@ -27,7 +27,7 @@ class TreeDataProvider {
 
 class TreeItem extends vscode.TreeItem {
  
-    constructor (label, treeType, children) {
+    constructor (label, treeType, children, parent, simpleLabel) {
         let collapsedTreeOrNot, labelToFeed, contextValue, tooltip;
 
         if (treeType === trees.APP) {
@@ -46,23 +46,15 @@ class TreeItem extends vscode.TreeItem {
         } else if (treeType === trees.URL) {
             collapsedTreeOrNot = vscode.TreeItemCollapsibleState.Collapsed;
             contextValue = 'urlName';
-            const _tempLabel = label.split(':');
-
-            if (_tempLabel.length === 1) {
-                labelToFeed = _tempLabel[0];
-            } else if (_tempLabel.length === 2) {
-                labelToFeed = _tempLabel[1];
-            } else {
-                labelToFeed = label;
-            };
-            tooltip = `url config named ${labelToFeed}`;
+            labelToFeed = simpleLabel;
+            tooltip = `URL config named ${labelToFeed}`;
 
         } else if (treeType === trees.ARGUMENT) {
             contextValue = 'args';
             const _tempLabel = label.split('=');
             const typeName = _tempLabel[1] === 'NULL'? 'Type undeclared': _tempLabel[1];
             labelToFeed = `${_tempLabel[0]} <${typeName}>`;
-            tooltip = 'url config argument';
+            tooltip = `URL config argument for ${parent}`;
         };
 
 

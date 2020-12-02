@@ -88,9 +88,12 @@ function readAndDisplayUrls (projectPath) {
 
 		// create urlConfig children
 		const appUrlConfigs = appUrlPatterns.map((appUrlPattern) => {
+			const _appName = appUrlPattern.reverseName.split(':');
+			const appName = _appName.length === 2? _appName[1]: appUrlPattern.reverseName;
+
 			// url config arguments
-			const urlArgs = appUrlPattern.arguments.map((arg) => new provider.TreeItem(`${arg.name}=${arg.argType}`, provider.trees.ARGUMENT));
-			return new provider.TreeItem(appUrlPattern.reverseName, provider.trees.URL, urlArgs);
+			const urlArgs = appUrlPattern.arguments.map((arg) => new provider.TreeItem(`${arg.name}=${arg.argType}`, provider.trees.ARGUMENT, [], appName));
+			return new provider.TreeItem(appUrlPattern.reverseName, provider.trees.URL, urlArgs, null, appName);
 		});
 
 		// add app
