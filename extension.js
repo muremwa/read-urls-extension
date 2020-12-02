@@ -117,7 +117,7 @@ function activate() {
 		readAndDisplayUrls(projectOne);
 
 		// Refresh button
-		vscode.commands.registerCommand('read-urls.refresh', () => readAndDisplayUrls());
+		vscode.commands.registerCommand('read-urls.refresh', () => readAndDisplayUrls(projectOne));
 
 		// copy for template
 		vscode.commands.registerCommand('read-urls.copyForTemplate', function (treeItem) {
