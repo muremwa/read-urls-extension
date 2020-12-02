@@ -110,7 +110,7 @@ function readAndDisplayUrls (projectPath) {
 function activate() {
 
 	// vscode.workspace.rootPath is depracated, currently the extension will support only workspace folder 1, others to be supported in future.
-	const projectOne = vscode.workspace.workspaceFolders[0].uri.fsPath;
+	const projectOne = vscode.workspace.workspaceFolders? vscode.workspace.workspaceFolders[0].uri.fsPath: null;
 
 	if (projectOne) {
 		// read and display every url
