@@ -53,14 +53,14 @@ function getReverseUrl (treeItem, lazy = false) {
 /* 
 	Read all urls and plant the tree
 */
-function readAndDisplayUrls () {
+function readAndDisplayUrls (projectPath) {
 	// know if this is a django project, true by default, changed using the isNotProject closure
 	let realProject = true;
 
 	// retrieve all urls using reader by passing in workspace path
-	const urlPatterns = reader.mainReader(vscode.workspace.rootPath, (isNotProject) => {
+	const urlPatterns = reader.mainReader(projectPath, (isNotProject) => {
 		if (isNotProject) {
-			vscode.window.showInformationMessage('This is not a django project');
+			vscode.window.showInformationMessage('This is not a django project.');
 			realProject = false;
 		};
 	}, (brace, file) => {
@@ -69,7 +69,7 @@ function readAndDisplayUrls () {
 	});
 
 	// load pre defined url configurations
-	const extraUrlPatterns = externalUrls(vscode.workspace.rootPath, (error, file) => {
+	const extraUrlPatterns = externalUrls(projectPath, (error, file) => {
 		vscode.window.showErrorMessage(`The configurations in ${file} are incorrect`);
 	}, () => {
 		vscode.window.showErrorMessage('Wrong formart on .vscode/urlConfigs/models.json')
@@ -108,9 +108,13 @@ function readAndDisplayUrls () {
  * @param {vscode.ExtensionContext} context
  */
 function activate() {
-	if (vscode.workspace.rootPath) {
+
+	// vscode.workspace.rootPath is depracated, currently the extension will support only workspace folder 1, others to be supported in future.
+	const projectOne = vscode.workspace.workspaceFolders[0].uri.fsPath;
+
+	if (projectOne) {
 		// read and display every url
-		readAndDisplayUrls();
+		readAndDisplayUrls(projectOne);
 
 		// Refresh button
 		vscode.commands.registerCommand('read-urls.refresh', () => readAndDisplayUrls());
