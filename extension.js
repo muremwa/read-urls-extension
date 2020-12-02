@@ -54,10 +54,14 @@ function getReverseUrl (treeItem, lazy = false) {
 	Read all urls and plant the tree
 */
 function readAndDisplayUrls () {
+	// know if this is a django project, true by default, changed using the isNotProject closure
+	let realProject = true;
+
 	// retrieve all urls using reader by passing in workspace path
 	const urlPatterns = reader.mainReader(vscode.workspace.rootPath, (isNotProject) => {
 		if (isNotProject) {
 			vscode.window.showInformationMessage('This is not a django project');
+			realProject = false;
 		};
 	}, (brace, file) => {
 		const smallFileName = file.split('\\');
@@ -72,7 +76,7 @@ function readAndDisplayUrls () {
 	});
 
 	// merge both patterns
-	const mergedPatterns = [...extraUrlPatterns.keys()].length? new Map([...extraUrlPatterns, ...urlPatterns]): urlPatterns;
+	const mergedPatterns = [...extraUrlPatterns.keys()].length && realProject? new Map([...extraUrlPatterns, ...urlPatterns]): urlPatterns;
 
 
 	// this shall contain all TreeItems to show
