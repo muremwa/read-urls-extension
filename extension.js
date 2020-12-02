@@ -60,7 +60,7 @@ function readAndDisplayUrls (projectPath) {
 	// retrieve all urls using reader by passing in workspace path
 	const urlPatterns = reader.mainReader(projectPath, (isNotProject) => {
 		if (isNotProject) {
-			vscode.window.showInformationMessage('This is not a django project.');
+			vscode.window.showInformationMessage('This is not a django project');
 			realProject = false;
 		};
 	}, (brace, file) => {
