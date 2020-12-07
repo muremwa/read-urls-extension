@@ -8,6 +8,8 @@ Jump to:
 • [Custom Url configurations](#custom-url-configurations).  
 • [Creating Custom Url configurations](#creating-custom-configurations).  
 • [Using `ModelAdmin` urls](#modeladmin-urls).  
+• [Multiple Django projects support](#)
+
 
 - - - 
 
@@ -131,6 +133,9 @@ _Changes to detect models automatically are in development._
     }
 ```
 - - -
+
+## Multiple Django projects support.
+The current version, __1.1.1__, only supports one django project in the workspace. Support shall be added for multiple projects. An issue is already _[open](https://github.com/muremwa/read-urls-extension/issues/4)_.
 
 ## MISC
 • Created by [Muremwa](https://github.com/muremwa/).  
