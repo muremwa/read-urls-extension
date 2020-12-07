@@ -8,7 +8,7 @@ Jump to:
 • [Custom Url configurations](#custom-url-configurations).  
 • [Creating Custom Url configurations](#creating-custom-configurations).  
 • [Using `ModelAdmin` urls](#modeladmin-urls).  
-• [Multiple Django projects support](#)
+• [Multiple Django folders support](#multiple-django-projects-support).  
 
 
 - - - 
