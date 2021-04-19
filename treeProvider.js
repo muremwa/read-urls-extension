@@ -1,8 +1,10 @@
 const vscode = require('vscode');
+const path = require('path');
 const trees = {
     APP: 0,
     URL: 1,
-    ARGUMENT: 2    
+    ARGUMENT: 2,
+    PROJECT: 3 
 };
 
 
@@ -28,7 +30,7 @@ class TreeDataProvider {
 class TreeItem extends vscode.TreeItem {
  
     constructor (label, treeType, children, parent, simpleLabel) {
-        let collapsedTreeOrNot, labelToFeed, contextValue, tooltip;
+        let collapsedTreeOrNot, labelToFeed, contextValue, tooltip, icons;
 
         if (treeType === trees.APP) {
             collapsedTreeOrNot = label === 'admin'? vscode.TreeItemCollapsibleState.Collapsed: vscode.TreeItemCollapsibleState.Expanded;
@@ -55,6 +57,15 @@ class TreeItem extends vscode.TreeItem {
             const typeName = _tempLabel[1] === 'NULL'? 'Type undeclared': _tempLabel[1];
             labelToFeed = `${_tempLabel[0]} <${typeName}>`;
             tooltip = `URL config argument for ${parent}`;
+        } else if (treeType === trees.PROJECT) {
+            contextValue = 'project';
+            labelToFeed = `${label} (PROJECT)`;
+            collapsedTreeOrNot = vscode.TreeItemCollapsibleState.Collapsed;
+            tooltip = `Project named ${label}`;
+            icons = {
+                light: path.join(__dirname, 'media', 'folder_light.png'),
+                dark: path.join(__dirname, 'media', 'folder_dark.png')
+            }
         };
 
 
@@ -63,6 +74,7 @@ class TreeItem extends vscode.TreeItem {
         this.ogLabel = label;
         this.contextValue = contextValue;
         this.tooltip = tooltip;
+        this.iconPath = icons;
     };
 
 };

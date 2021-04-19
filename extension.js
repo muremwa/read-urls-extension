@@ -53,56 +53,72 @@ function getReverseUrl (treeItem, lazy = false) {
 /* 
 	Read all urls and plant the tree
 */
-function readAndDisplayUrls (projectPath) {
-	// know if this is a django project, true by default, changed using the isNotProject closure
-	let realProject = true;
+function readAndDisplayUrls (projects) {
+	const projectTrees = [];
 
-	// retrieve all urls using reader by passing in workspace path
-	const urlPatterns = reader.mainReader(projectPath, (isNotProject) => {
-		if (isNotProject) {
-			vscode.window.showInformationMessage('This is not a django project');
-			realProject = false;
-		};
-	}, (brace, file) => {
-		const smallFileName = file.split('\\');
-		vscode.window.showInformationMessage(`${smallFileName.splice(smallFileName.length - 2, 2).join('\\')} is missing '${brace}'`);
-	});
+	// loop through all projects and set up trees
+	for (_project of projects) {
+		const projectPath = _project[1];
+		// know if this is a django project, true by default, changed using the isNotProject closure
+		let realProject = true;
 
-	// load pre defined url configurations
-	const extraUrlPatterns = externalUrls(projectPath, (error, file) => {
-		vscode.window.showErrorMessage(`The configurations in ${file} are incorrect`);
-	}, () => {
-		vscode.window.showErrorMessage('Wrong formart on .vscode/urlConfigs/models.json')
-	});
-
-	// merge both patterns
-	const mergedPatterns = [...extraUrlPatterns.keys()].length && realProject? new Map([...extraUrlPatterns, ...urlPatterns]): urlPatterns;
-
-
-	// this shall contain all TreeItems to show
-	const urlTreeItems = [];
-
-	// loop through all patterns and create tree items
-	for (const app of mergedPatterns.keys()) {
-		const appUrlPatterns = mergedPatterns.get(app);
-
-		// create urlConfig children
-		const appUrlConfigs = appUrlPatterns.map((appUrlPattern) => {
-			const _appName = appUrlPattern.reverseName.split(':');
-			const appName = _appName.length === 2? _appName[1]: appUrlPattern.reverseName;
-
-			// url config arguments
-			const urlArgs = appUrlPattern.arguments.map((arg) => new provider.TreeItem(`${arg.name}=${arg.argType}`, provider.trees.ARGUMENT, [], appName));
-			return new provider.TreeItem(appUrlPattern.reverseName, provider.trees.URL, urlArgs, null, appName);
+		// retrieve all urls using reader by passing in workspace path
+		const urlPatterns = reader.mainReader(projectPath, (isNotProject) => {
+			if (isNotProject) {
+				vscode.window.showInformationMessage(`'${_project[0]}' is not a django project`);
+				realProject = false;
+			};
+		}, (brace, file) => {
+			const smallFileName = file.split('\\');
+			vscode.window.showInformationMessage(`${smallFileName.splice(smallFileName.length - 2, 2).join('\\')} is missing '${brace}'`);
 		});
 
-		// add app
-		urlTreeItems.push(
-			new provider.TreeItem(app, provider.trees.APP, appUrlConfigs)
-		);
+		// load pre defined url configurations
+		const extraUrlPatterns = externalUrls(projectPath, (error, file) => {
+			vscode.window.showErrorMessage(`The configurations in ${file} are incorrect`);
+		}, () => {
+			vscode.window.showErrorMessage(`Wrong format on ${_project[0]}/.vscode/urlConfigs/models.json`)
+		});
+
+		// merge both patterns
+		const mergedPatterns = [...extraUrlPatterns.keys()].length && realProject? new Map([...extraUrlPatterns, ...urlPatterns]): urlPatterns;
+
+
+		// this shall contain all TreeItems to show
+		const urlTreeItems = [];
+
+		// loop through all patterns and create tree items
+		for (const app of mergedPatterns.keys()) {
+			const appUrlPatterns = mergedPatterns.get(app);
+
+			// create urlConfig children
+			const appUrlConfigs = appUrlPatterns.map((appUrlPattern) => {
+				const _appName = appUrlPattern.reverseName.split(':');
+				const appName = _appName.length === 2? _appName[1]: appUrlPattern.reverseName;
+
+				// url config arguments
+				const urlArgs = appUrlPattern.arguments.map((arg) => new provider.TreeItem(`${arg.name}=${arg.argType}`, provider.trees.ARGUMENT, [], appName));
+				return new provider.TreeItem(appUrlPattern.reverseName, provider.trees.URL, urlArgs, null, appName);
+			});
+
+			// add app
+			urlTreeItems.push(
+				new provider.TreeItem(app, provider.trees.APP, appUrlConfigs)
+			);
+		};
+
+		if (realProject) {
+			projectTrees.push(
+				new provider.TreeItem(_project[0], provider.trees.PROJECT, urlTreeItems)
+			);
+		};
 	};
 
-	vscode.window.registerTreeDataProvider('project-urls', new provider.TreeDataProvider(urlTreeItems));
+	if (projectTrees.length === 1) {
+		vscode.window.registerTreeDataProvider('project-urls', new provider.TreeDataProvider(projectTrees[0].children));
+	} else {
+		vscode.window.registerTreeDataProvider('project-urls', new provider.TreeDataProvider(projectTrees));
+	};
 	
 };
 
@@ -112,15 +128,16 @@ function readAndDisplayUrls (projectPath) {
  */
 function activate() {
 
-	// vscode.workspace.rootPath is depracated, currently the extension will support only workspace folder 1, others to be supported in future.
-	const projectOne = vscode.workspace.workspaceFolders? vscode.workspace.workspaceFolders[0].uri.fsPath: null;
+	// get all projects in the workspace
+	const workspaceProjects = vscode.workspace.workspaceFolders.map((project) => [project.name, project.uri.fsPath]);
 
-	if (projectOne) {
+
+	if (workspaceProjects.length > 0) {
 		// read and display every url
-		readAndDisplayUrls(projectOne);
+		readAndDisplayUrls(workspaceProjects);
 
 		// Refresh button
-		vscode.commands.registerCommand('read-urls.refresh', () => readAndDisplayUrls(projectOne));
+		vscode.commands.registerCommand('read-urls.refresh', () => readAndDisplayUrls(workspaceProjects));
 
 		// copy for template
 		vscode.commands.registerCommand('read-urls.copyForTemplate', function (treeItem) {
