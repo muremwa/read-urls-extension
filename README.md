@@ -1,13 +1,14 @@
 # Django Urls configurations Reader.
-Reads all urls configurations declared in a Django project and copy to clipboard.  
+Reads all urls configurations declared in all Django projects within a VSCODE workspace and copy to clipboard.  
 
 Gives the option of copying the url as __reverse__, __reverse_lazy__ or as a __template tag__ to your __clipboard__.  
 Install from [here](https://marketplace.visualstudio.com/items?itemName=muremwa.read-urls).  
 Jump to:  
-• [Usage](#usage).  
-• [Custom Url configurations](#custom-url-configurations).  
-• [Creating Custom Url configurations](#creating-custom-configurations).  
-• [Using `ModelAdmin` urls](#modeladmin-urls).  
+• [Usage](#usage 'Usage of the extension').  
+• [Custom Url configurations](#custom-url-configurations 'Custom URL conf').  
+• [Creating Custom Url configurations](#creating-custom-configurations 'Creating custom conf').  
+• [Using `ModelAdmin` urls](#modeladmin-urls 'ModelAdmin Urls').  
+• [Multiple Projects in the workspace](#multiple-projects-in-a-workspace 'Multiple projects').  
 
 - - - 
 
@@ -130,6 +131,10 @@ _Changes to detect models automatically are in development._
         "app_label_2": ["model3"]
     }
 ```
+- - -
+## Multiple Projects in a workspace.
+The extension now supports multiple projects in one workspace. Once you add a folder to the workspace, reload the window to view changes.  
+![Multiple projects appear like this](media/imgs/multiple_projects.png 'Multiple projects appear like this')
 - - -
 
 ## MISC
