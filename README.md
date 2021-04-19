@@ -4,11 +4,12 @@ Reads all urls configurations declared in all Django projects within a VSCODE wo
 Gives the option of copying the url as __reverse__, __reverse_lazy__ or as a __template tag__ to your __clipboard__.  
 Install from [here](https://marketplace.visualstudio.com/items?itemName=muremwa.read-urls).  
 Jump to:  
+
 • [Usage](#usage 'Usage of the extension').  
 • [Custom Url configurations](#custom-url-configurations 'Custom URL conf').  
 • [Creating Custom Url configurations](#creating-custom-configurations 'Creating custom conf').  
 • [Using `ModelAdmin` urls](#modeladmin-urls 'ModelAdmin Urls').  
-• [Multiple Projects in the workspace](#multiple-projects-in-a-workspace 'Multiple projects').  
+• [Multiple Django folders support](#multiple-projects-in-a-workspace 'Multiple folders').  
 
 - - - 
 
