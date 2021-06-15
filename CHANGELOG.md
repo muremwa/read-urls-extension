@@ -31,3 +31,7 @@
 ## [2.0.0] - 2021-04-19
 ### Added
 - Added support for multiple projects in the workspace
+
+## [2.0.1] - 2021-06-16
+### Added
+- Renamed from __django-urls-reader__ to __Django URLS Reader__.

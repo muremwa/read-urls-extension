@@ -1,8 +1,8 @@
 {
 	"name": "read-urls",
-	"displayName": "django-urls-reader",
-	"description": "Read a django project URL configurations.",
-	"version": "2.0.0",
+	"displayName": "Django URLS Reader",
+	"description": "Read a django project's URL configurations.",
+	"version": "2.0.1",
 	"publisher": "muremwa",
 	"icon": "media/ex_icon.png",
 	"engines": {
