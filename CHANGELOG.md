@@ -27,3 +27,7 @@
 - Removed Admin URL configs when the project is not a Django one. [Issue here](https://github.com/muremwa/read-urls-extension/issues/3).
 - Tooltips changed.
 - `vscode.workspace.rootPath` is depracated, updated to `vscode.workspace.workspaceFolders`.
+
+## [2.0.0] - 2021-04-19
+### Added
+- Added support for multiple projects in the workspace
