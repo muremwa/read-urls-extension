@@ -29,12 +29,25 @@ class TreeDataProvider {
 
 class TreeItem extends vscode.TreeItem {
  
-    constructor (label, treeType, children, parent, simpleLabel) {
+    constructor (label, treeType, children, parent, simpleLabel, settings, extra) {
         let collapsedTreeOrNot, labelToFeed, contextValue, tooltip, icons;
 
         if (treeType === trees.APP) {
-            collapsedTreeOrNot = label === 'admin'? vscode.TreeItemCollapsibleState.Collapsed: vscode.TreeItemCollapsibleState.Expanded;
             contextValue = 'app';
+
+            switch (settings.expandApps) {
+                case 'collapsed':
+                    collapsedTreeOrNot = vscode.TreeItemCollapsibleState.Collapsed;
+                    break;
+                
+                case 'expanded':
+                    collapsedTreeOrNot = vscode.TreeItemCollapsibleState.Expanded;
+                    break;
+            
+                default:
+                    collapsedTreeOrNot = label === 'admin' || extra? vscode.TreeItemCollapsibleState.Collapsed: vscode.TreeItemCollapsibleState.Expanded;
+                    break;
+            }
             
             if (label.includes('READER_FILE_PATH')) {
                 const _tempLabel = label.split('\\');

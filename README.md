@@ -1,6 +1,9 @@
 # Django Urls configurations Reader.
 Reads all urls configurations declared in all Django projects within a VSCODE workspace and copy to clipboard.  
 
+> ### ✨✨Introducing [settings](#settings 'new settings') for the extension ✨✨  
+<br>
+
 Gives the option of copying the url as __reverse__, __reverse_lazy__ or as a __template tag__ to your __clipboard__.  
 Install from [here](https://marketplace.visualstudio.com/items?itemName=muremwa.read-urls).  
 Jump to:  
@@ -48,8 +51,34 @@ Sometimes you need 3rd party apps in your project which may have custom URL conf
 
 >The extension comes pre-loaded with the `AdminSite`, `ModelAdmin` and `UserAdmin` configurations.
 - - -
+
+## Settings
+The extension now has settings. They live inside `.vscode/urlConfigs/settings.json` inside in your project. They are on a project by project basis. If you have two projects in one workspace, each project shall have it's own sets of settings.  
+
+Options for settings are explained below showing an example `.vscode/urlConfigs/settings.json` file;
+```json
+    {
+        adminUrls: true,
+        autoLoadModels: true,
+        builtInAuth: false,
+        expandApps: 'normal'
+    }
+
+```
+
+1. `adminUrls` **[Boolean]**: `true` to show admin site urls configurations and `false` to not show.  
+2. `autoLoadModels` **[Boolean]**: `true` to automatically discover models and `false` to use `.vscode/urlConfigs/models.json` (the traditional approach).  
+3. `builtInAuth` **[Boolean]**: `true` to show url configurations from the built-in authentication sytem i.e. `django.contrib.auth.urls` or `false` to not.  
+4. `expandApps` **[String]**: Collapse or expand the Apps to show urls. Choices are 3; `collapsed`, `expanded` or `normal`. normal is the default.
+   
+
+> `expandApps` requires a window reload to show changes
+
+
+- - -
 ## Creating custom configurations.
-The JSON file, named in the format described in the previous section, contains a list/array of Whole app configurations. i.e. Your whole project, no matter home many apps/urls.py there are, would be added to one `*.conf.json` file. Say there are three apps in your project, `api`, `store`, `billing`, they would described in one file.
+The JSON file, named in the format described in the previous section, contains a list/array of Whole app configurations. i.e. Your whole project, no matter home many apps/urls.py there are, would be added to one `*.conf.json` file. Say there are three apps in your project, `api`, `store`, `billing`, they can be described in one file or a separate file for each.  
+Custom configurations appear at the top and are collapsed by default.
 
 Each app entry, in the array of apps, is an object with two properties: 
 1. `appName` __[String]__: A string with the name of the app. _(Note this is not the usual `app_name` declared in the `urls.py`. It will just appear as the title in our URl configurations view)._

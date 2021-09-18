@@ -50,7 +50,7 @@ function _getModels (home, wrongFomartCallback, noModelsCallback) {
 }}
 */
 function createSingleModelUrls (model, appName, appLabel, extraLabel, objectId) {
-    return url = {
+    return {
         "reverseName": `${appName}:${appLabel}_${model}_${extraLabel}`,
         "arguments": objectId? [
             {

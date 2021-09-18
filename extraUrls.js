@@ -57,9 +57,12 @@ function _loadExtraUrls (files, errorCallBack) {
 
 /**
  * @param {string} home
+ * @param {() => void} handleExternalReadError
+ * @param {() => void} wrongFormatModels
+ * @param {{}} settings
  * @returns {Map<string, []>}
  */
-function loadUrls (home, handleExternalReadError, wrongFormatModels) {
+function loadUrls (home, handleExternalReadError, wrongFormatModels, settings) {
     // Read json files in extraUrls
     let userConfigs;
 
@@ -69,10 +72,15 @@ function loadUrls (home, handleExternalReadError, wrongFormatModels) {
         userConfigs = [];
     };
 
-    const jFiles = [
-        ...fs.readdirSync(path.join(__dirname, EXTRAURLS)).map((file) => path.join(__dirname, EXTRAURLS, file)),
-        ...userConfigs
-    ];
+    // remove certain files depending on the seting
+    const filesToRemove = [
+        ['adminUrls', 'admin.conf.json'],
+        ['builtInAuth', 'auth.conf.json']
+    ].filter((choice) => !settings[choice[0]]).map((choice) => choice[1])
+
+    const extraUrlFiles = fs.readdirSync(path.join(__dirname, EXTRAURLS)).filter((file) => !filesToRemove.includes(file));
+
+    const jFiles = [...userConfigs, ...extraUrlFiles.map((file) => path.join(__dirname, EXTRAURLS, file))]
 
     const urls = _loadExtraUrls(jFiles, handleExternalReadError);
 

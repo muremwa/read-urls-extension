@@ -1,0 +1,70 @@
+[
+    {
+        "appName": "auth\urls.py",
+        "urls": [
+            {
+                "reverseName": "login",
+                "arguments": [],
+                "viewName": "views.LoginView.as_view()",
+                "hasArgs": false
+            },
+            {
+                "reverseName": "logout",
+                "arguments": [],
+                "viewName": "views.LogoutView.as_view()",
+                "hasArgs": false
+            },
+            {
+                "reverseName": "login",
+                "arguments": [],
+                "viewName": "views.LoginView.as_view()",
+                "hasArgs": false
+            },
+            {
+                "reverseName": "password_change",
+                "arguments": [],
+                "viewName": "views.PasswordChangeView.as_view()",
+                "hasArgs": false
+            },
+            {
+                "reverseName": "password_change_done",
+                "arguments": [],
+                "viewName": "views.PasswordChangeDoneView.as_view()",
+                "hasArgs": false
+            },
+            {
+                "reverseName": "password_reset",
+                "arguments": [],
+                "viewName": "views.PasswordResetView.as_view()",
+                "hasArgs": false
+            },
+            {
+                "reverseName": "password_reset_done",
+                "arguments": [],
+                "viewName": "views.PasswordResetDoneView.as_view()",
+                "hasArgs": false
+            },
+            {
+                "reverseName": "password_reset_confirm",
+                "arguments": [
+                    {
+                        "name": "uidb64",
+                        "argType": "string"
+                    },
+                    {
+                        "name": "token",
+                        "argType": "string"
+                    }
+                ],
+                "viewName": "views.PasswordResetConfirmView.as_view()",
+                "hasArgs": true
+            },
+            {
+                "reverseName": "password_reset_complete",
+                "arguments": [],
+                "viewName": "views.PasswordResetCompleteView.as_view()",
+                "hasArgs": false
+            }
+        ]
+    }
+]
