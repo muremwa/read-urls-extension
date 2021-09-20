@@ -9,8 +9,9 @@ Install from [here](https://marketplace.visualstudio.com/items?itemName=muremwa.
 Jump to:  
 
 • [Usage](#usage 'Usage of the extension').  
+• [Settings](#settings 'Settings for the extension').  
 • [Custom Url configurations](#custom-url-configurations 'Custom URL conf').  
-• [Creating Custom Url configurations](#creating-custom-configurations 'Creating custom conf').  
+• [Creating Custom URL configurations](#creating-custom-configurations 'Creating custom conf').  
 • [Using `ModelAdmin` urls](#modeladmin-urls 'ModelAdmin Urls').  
 • [Multiple Django folders support](#multiple-projects-in-a-workspace 'Multiple folders').  
 
@@ -34,7 +35,7 @@ If not the it's a single item.
 ![image explaining the project urls view](media/imgs/explanation.png 'Diffrent parts of the view')
 - - -
 
-## Actions.
+### Actions.
 On hovering over a url name, there are three buttons __(from left to right)__.  
 1. Copy 'reverse' url.
 2. Copy 'reverse_lazy' url.
@@ -46,12 +47,6 @@ All three copy to clipboard and can be pasted in your view or template.
 - - -
 
 
-## Custom URL configurations.  
-Sometimes you need 3rd party apps in your project which may have custom URL configurations. These configurations can be described in a JSON file named in the format; '`app.conf.json`'. These files are saved in '`.vscode/urlConfigs/`' folder in the root of your project to allow the extension to find them. They are combined with your project's configurations. To describe the URL configurations click [here](#creating-custom-configurations).  
-
->The extension comes pre-loaded with the `AdminSite`, `ModelAdmin` and `UserAdmin` configurations.
-- - -
-
 ## Settings
 The extension now has settings. They live inside `.vscode/urlConfigs/settings.json` inside in your project. They are on a project by project basis. If you have two projects in one workspace, each project shall have it's own sets of settings.  
 
@@ -60,6 +55,7 @@ Options for settings are explained below showing an example `.vscode/urlConfigs/
     {
         adminUrls: true,
         autoLoadModels: true,
+        registeredAppsOnly: false,
         builtInAuth: false,
         expandApps: 'normal'
     }
@@ -67,15 +63,24 @@ Options for settings are explained below showing an example `.vscode/urlConfigs/
 ```
 
 1. `adminUrls` **[Boolean]**: `true` to show admin site urls configurations and `false` to not show.  
-2. `autoLoadModels` **[Boolean]**: `true` to automatically discover models and `false` to use `.vscode/urlConfigs/models.json` (the traditional approach).  
-3. `builtInAuth` **[Boolean]**: `true` to show url configurations from the built-in authentication sytem i.e. `django.contrib.auth.urls` or `false` to not.  
-4. `expandApps` **[String]**: Collapse or expand the Apps to show urls. Choices are 3; `collapsed`, `expanded` or `normal`. normal is the default.
+2. `autoLoadModels` **[Boolean]**: `true` to automatically discover models and `false` to use just `.vscode/urlConfigs/models.json` (the traditional approach).  
+3. `registeredAppsOnly` **[Boolean]**: Automatically detect models from registered apps only. Default is `false`.
+4. `builtInAuth` **[Boolean]**: `true` to show url configurations from the built-in authentication sytem i.e. `django.contrib.auth.urls` or `false` to not.  
+5. `expandApps` **[String]**: Collapse or expand the Apps to show urls. Choices are 3; `collapsed`, `expanded` or `normal`. normal is the default.
    
 
 > `expandApps` requires a window reload to show changes
 
 
 - - -
+
+
+## Custom URL configurations.  
+Sometimes you need 3rd party apps in your project which may have URL configurations. These configurations can be described in a JSON file named in the format; '`app.conf.json`'. These files are saved in '`.vscode/urlConfigs/`' folder in the root of your project to allow the extension to find them. They are combined with your project's configurations. To describe the URL configurations click [here](#creating-custom-configurations).  
+
+>The extension comes pre-loaded with the `AdminSite`, `ModelAdmin` and `UserAdmin` configurations.
+- - -
+
 ## Creating custom configurations.
 The JSON file, named in the format described in the previous section, contains a list/array of Whole app configurations. i.e. Your whole project, no matter home many apps/urls.py there are, would be added to one `*.conf.json` file. Say there are three apps in your project, `api`, `store`, `billing`, they can be described in one file or a separate file for each.  
 Custom configurations appear at the top and are collapsed by default.

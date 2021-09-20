@@ -5,6 +5,7 @@ const fs = require('fs');
 const defaultSettings = {
     adminUrls: true,
     autoLoadModels: true,
+    registeredAppsOnly: false,
     builtInAuth: false,
     expandApps: 'normal'
 }
