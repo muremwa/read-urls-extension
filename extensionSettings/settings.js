@@ -33,7 +33,8 @@ function cleanUpSettings (tempSettings) {
     adminUrls: boolean,
     autoLoadModels: boolean,
     builtInAuth: boolean,
-    expandApps: string
+    expandApps: string,
+    registeredAppsOnly: false
 }} extensionSettings
 */
 function loadSettings (rootPath, errorWithSettings) {

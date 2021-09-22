@@ -57,12 +57,13 @@ function _loadExtraUrls (files, errorCallBack) {
 
 /**
  * @param {string} home
+ * @param {{}} settings
+ * @param {Map<string, string[]>} detectedModels
  * @param {() => void} handleExternalReadError
  * @param {() => void} wrongFormatModels
- * @param {{}} settings
  * @returns {Map<string, []>}
  */
-function loadUrls (home, handleExternalReadError, wrongFormatModels, settings) {
+function loadUrls (home, settings, detectedModels, handleExternalReadError, wrongFormatModels) {
     // Read json files in extraUrls
     let userConfigs;
 
@@ -85,7 +86,7 @@ function loadUrls (home, handleExternalReadError, wrongFormatModels, settings) {
     const urls = _loadExtraUrls(jFiles, handleExternalReadError);
 
     if (urls.has('admin')) {
-        const modelUrls = modelAdmin(home, wrongFormatModels, () => {});
+        const modelUrls = modelAdmin(home, detectedModels, wrongFormatModels, () => {});
         urls.set('admin', [...urls.get('admin'), ...modelUrls]);
     };
 

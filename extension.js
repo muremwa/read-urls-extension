@@ -6,6 +6,7 @@ const provider = require('./treeProvider');
 const externalUrls = require('./extraUrls').loadUrls;
 const clipboard = require('clipboardy');
 const extensionSetting = require('./extensionSettings/settings');
+const modelDetection = require('./modelDetection');
 
 /**
  * @param {string} stringToAdd
@@ -79,11 +80,12 @@ function readAndDisplayUrls (projects) {
 		});
 
 		// load pre defined url configurations
-		const extraUrlPatterns = externalUrls(projectPath, (error, file) => {
+		const detectedModels = settings.autoLoadModels? modelDetection.detect(projectPath, settings.registeredAppsOnly): new Map();
+		const extraUrlPatterns = externalUrls(projectPath, settings, detectedModels, (error, file) => {
 			vscode.window.showErrorMessage(`The configurations in ${file} are incorrect`);
 		}, () => {
 			vscode.window.showErrorMessage(`Wrong format on ${_project[0]}/.vscode/urlConfigs/models.json`)
-		}, settings);
+		});
 
 		// merge both patterns
 		const mergedPatterns = [...extraUrlPatterns.keys()].length && realProject? new Map([...extraUrlPatterns, ...urlPatterns]): urlPatterns;

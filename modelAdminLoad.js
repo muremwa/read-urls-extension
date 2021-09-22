@@ -67,6 +67,7 @@ function createSingleModelUrls (model, appName, appLabel, extraLabel, objectId) 
 
 /**
 *@param {string} home
+*@param {Map<string, string[]>} detectedModels
 *@param {() => void} wrongFomartCallback
 *@param {() => void} noModelsCallback
 *@returns {{
@@ -76,9 +77,12 @@ function createSingleModelUrls (model, appName, appLabel, extraLabel, objectId) 
     hasArgs: boolean
 }[]}
 **/
-function loadModelAdminConfigs (home, wrongFomartCallback, noModelsCallback) {
+function loadModelAdminConfigs (home, detectedModels, wrongFomartCallback, noModelsCallback) {
     let patterns = [];
-    const models = _getModels(home, wrongFomartCallback, noModelsCallback);
+    const extraModels = _getModels(home, wrongFomartCallback, noModelsCallback);
+    const models = detectedModels;
+    [...extraModels.keys()].forEach((key) => !models.has(key)? models.set(key, extraModels.get(key)): void 0);
+
     const modelAdminUrls = [
         ['changelist', false],
         ['add', false],
@@ -92,6 +96,7 @@ function loadModelAdminConfigs (home, wrongFomartCallback, noModelsCallback) {
 
         if (Array.isArray(appModels)) {
             patterns = [...patterns, ...appModels.map((appModel) => {
+                appModel = appModel.toLowerCase();
                 return modelAdminUrls.map((url) => createSingleModelUrls(appModel, 'admin', model, url[0], url[1]))
             }).flat()];
         };
