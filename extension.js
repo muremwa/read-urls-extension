@@ -76,7 +76,7 @@ function readAndDisplayUrls (projects) {
 
 		// retrieve settings
 		const settings = extensionSetting.loadSettings(projectPath, () => {
-			vscode.window.showErrorMessage('Error loading settings');
+			vscode.window.showErrorMessage('A problem occured while loading settings');
 		});
 
 		// load pre defined url configurations

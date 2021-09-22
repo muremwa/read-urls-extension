@@ -171,6 +171,7 @@ function retrieveModelClassNames (fileText) {
  */
  function searchModels (projectRootPath, registeredOnly = false) {
     const localApps = [];
+    let authModels = ['Group', 'User'];
 
     // project directories
     const rootDirs = fs.readdirSync(projectRootPath, {
@@ -225,7 +226,11 @@ function retrieveModelClassNames (fileText) {
                         if (rootDirs.includes(appDir)) {
                             localApps.push(appDir);
                         };
-                    })
+                    });
+                };
+
+                if (settingsText.match(/AUTH_USER_MODEL/g)) {
+                    authModels = ['Group'];
                 };
             };
         };
@@ -239,7 +244,7 @@ function retrieveModelClassNames (fileText) {
     };
 
     // loop through every app and retieve models
-    const projectModels = new Map()
+    const projectModels = new Map([['auth', authModels]])
     localApps.forEach((app) => {
         const modelClasses = retrieveTextFromAdminModule(path.join(projectRootPath, app)).map((moduleText) => {
             return retrieveModelClassNames(moduleText).registeredModels;

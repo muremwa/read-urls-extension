@@ -2,6 +2,7 @@
 Reads all urls configurations declared in all Django projects within a VSCODE workspace and copy to clipboard.  
 
 > ### ✨✨Introducing [settings](#settings 'new settings') for the extension ✨✨  
+> Models in the project are now automatically detected by the extension.
 <br>
 
 Gives the option of copying the url as __reverse__, __reverse_lazy__ or as a __template tag__ to your __clipboard__.  
@@ -78,7 +79,10 @@ Options for settings are explained below showing an example `.vscode/urlConfigs/
 ## Custom URL configurations.  
 Sometimes you need 3rd party apps in your project which may have URL configurations. These configurations can be described in a JSON file named in the format; '`app.conf.json`'. These files are saved in '`.vscode/urlConfigs/`' folder in the root of your project to allow the extension to find them. They are combined with your project's configurations. To describe the URL configurations click [here](#creating-custom-configurations).  
 
->The extension comes pre-loaded with the `AdminSite`, `ModelAdmin` and `UserAdmin` configurations.
+>The extension comes pre-loaded with the `AdminSite`, `ModelAdmin`, `django.contrib.auth` and `UserAdmin` configurations.
+
+To turn off _AdminSite_, _ModelAdmin_ and *UserAdmin*, add `adminUrls: false` to settings. 
+To turn on `django.contrib.auth` URL configurations, add `builtInAuth: true` to settings.
 - - -
 
 ## Creating custom configurations.
@@ -155,11 +159,12 @@ To load changes click the reload button.
 
 - - - 
 ## `ModelAdmin` URLs.
-To use your admin models URL, add an object in `.vscode/urlConfigs/models.json` with properties as app_labels _(peak into `apps.py`)_ and a list of model names. 
+Models in your project are **AUTOMATICALLY** detected by the extension. This option is enabled by default, to turn off add `autoLoadModels: false` to settings. To add more models, third party models or others, add an object in `.vscode/urlConfigs/models.json` with properties as app_labels _(peak into `apps.py`)_ and a list of model names. 
 
 To load changes click the reload button.
 
-_Changes to detect models automatically are in development._
+__~~Changes to detect models automatically are in development.~~__  
+__Models can now be automatically detected.__
 ```JSON
     {
         "app_label": ["model1", "model2"],
