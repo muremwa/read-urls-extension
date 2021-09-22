@@ -167,7 +167,7 @@ function retrieveModelClassNames (fileText) {
  * Takes the root of the project and searches for all models in the project
  * @param {string} projectRootPath 
  * @param {boolean} registeredOnly only search registered apps only; default is false
- * @returns {{app: string[]}} object whose keys are apps and values are arrays of model class names
+ * @returns {Map<string, string[]>} a map whose keys are apps and values are arrays of model class names
  */
  function searchModels (projectRootPath, registeredOnly = false) {
     const localApps = [];
@@ -239,14 +239,14 @@ function retrieveModelClassNames (fileText) {
     };
 
     // loop through every app and retieve models
-    const projectModels = {}
+    const projectModels = new Map()
     localApps.forEach((app) => {
         const modelClasses = retrieveTextFromAdminModule(path.join(projectRootPath, app)).map((moduleText) => {
             return retrieveModelClassNames(moduleText).registeredModels;
         });
         
         if (modelClasses.length) {
-            projectModels[app] = modelClasses.flat();
+            projectModels.set(app, modelClasses.flat());
         };
     });
 
