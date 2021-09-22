@@ -1,5 +1,5 @@
-# Django Urls configurations Reader.
-Reads all urls configurations declared in all Django projects within a VSCODE workspace and copy to clipboard.  
+# Django URLs configurations Reader.
+Reads all urls configurations (`urls.py`) declared in all Django projects within a VSCODE workspace and copy to clipboard.  
 
 > ### ✨✨Introducing [settings](#settings 'new settings') for the extension ✨✨  
 > Models in the project are now automatically detected by the extension.
@@ -19,16 +19,16 @@ Jump to:
 - - - 
 
 ## Usage.  
-The extension adds a view on your side bar with the. Navigate to that view and click to open it and 
+The extension adds a view on your side bar with an icon like a chain 🔗. Navigate to that view and click to open it and 
 activate the extension.  
 
 - - -
 ![acitvate extension](media/imgs/no_1.png 'What you\'ll see before activation')
 - - -
 
-Give it a few moments to read all urls and populate the view.   Once done it will populate the view with your urls.
+Give it a few moments to read all urls and populate the view.   Once done it will populate the view with your URL configurations.
 
-Each app will be a collapsable tree with its urls as the children. App names are in __ALL CAPS__. If an app has no `app_name` it will be displayed in the following format `PARENT_FOLDER/URLS.PY`.  
+Each app will be a collapsable tree with its urls as the children. App names are in __ALL CAPS__. If an app has no `app_name` it will be displayed in the following format `PARENT_FOLDER\URLS.PY`.  
 A url may have children if it's arguments are defined.
 If not the it's a single item.
 
@@ -42,7 +42,7 @@ On hovering over a url name, there are three buttons __(from left to right)__.
 2. Copy 'reverse_lazy' url.
 3. Copy as a template tag.
 
-All three copy to clipboard and can be pasted in your view or template.
+All three copy to clipboard and can be pasted in your code, all you need to change is names of the arguments to match you namespace *(The arguments are surrounded by **'%'** to make sure your editor or linter catches it to remind you to change it)*.
 - - -
   ![hover buttons](media/imgs/hovering_buttons.png 'hover over a url to expose available actions')
 - - -
@@ -79,8 +79,7 @@ Options for settings are explained below showing an example `.vscode/urlConfigs/
 ## Custom URL configurations.  
 Sometimes you need 3rd party apps in your project which may have URL configurations. These configurations can be described in a JSON file named in the format; '`app.conf.json`'. These files are saved in '`.vscode/urlConfigs/`' folder in the root of your project to allow the extension to find them. They are combined with your project's configurations. To describe the URL configurations click [here](#creating-custom-configurations).  
 
->The extension comes pre-loaded with the `AdminSite`, `ModelAdmin`, `django.contrib.auth` and `UserAdmin` configurations.
-
+>The extension comes pre-loaded with the `AdminSite`, `ModelAdmin`, `django.contrib.auth` and `UserAdmin` configurations.   
 To turn off _AdminSite_, _ModelAdmin_ and *UserAdmin*, add `adminUrls: false` to settings. 
 To turn on `django.contrib.auth` URL configurations, add `builtInAuth: true` to settings.
 - - -
