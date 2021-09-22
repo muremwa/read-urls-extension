@@ -1,6 +1,6 @@
 [
     {
-        "appName": "auth\urls.py",
+        "appName": "django\\contrib\\auth\\urls.py",
         "urls": [
             {
                 "reverseName": "login",
