@@ -29,8 +29,8 @@ class TreeDataProvider {
 
 class TreeItem extends vscode.TreeItem {
  
-    constructor (label, treeType, children, parent, simpleLabel, settings, extra) {
-        let collapsedTreeOrNot, labelToFeed, contextValue, tooltip, icons;
+    constructor (label, treeType, children, parent, simpleLabel, settings, isExtraApp, useKeyWords) {
+        let collapsedTreeOrNot, labelToFeed, contextValue, tooltip, icons, keywords;
 
         if (treeType === trees.APP) {
             contextValue = 'app';
@@ -45,7 +45,7 @@ class TreeItem extends vscode.TreeItem {
                     break;
             
                 default:
-                    collapsedTreeOrNot = label === 'admin' || extra? vscode.TreeItemCollapsibleState.Collapsed: vscode.TreeItemCollapsibleState.Expanded;
+                    collapsedTreeOrNot = label === 'admin' || isExtraApp? vscode.TreeItemCollapsibleState.Collapsed: vscode.TreeItemCollapsibleState.Expanded;
                     break;
             }
             
@@ -62,6 +62,7 @@ class TreeItem extends vscode.TreeItem {
             collapsedTreeOrNot = vscode.TreeItemCollapsibleState.Collapsed;
             contextValue = 'urlName';
             labelToFeed = simpleLabel;
+            keywords = settings.urlWithKeywords;
             tooltip = `URL config named ${labelToFeed}`;
 
         } else if (treeType === trees.ARGUMENT) {
@@ -88,6 +89,7 @@ class TreeItem extends vscode.TreeItem {
         this.contextValue = contextValue;
         this.tooltip = tooltip;
         this.iconPath = icons;
+        this.keywords = keywords;
     };
 
 };

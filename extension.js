@@ -12,12 +12,7 @@ const modelDetection = require('./modelDetection');
  * @param {string} stringToAdd
  * @returns {void}
 */
-function addToClipBoard (stringToAdd) {
-	/* 
-		Add stringToAdd to clipboard
-	*/
-	clipboard.writeSync(stringToAdd);
-};
+const addToClipBoard = (stringToAdd) => clipboard.writeSync(stringToAdd);
 
 
 
@@ -31,19 +26,21 @@ function getReverseUrl (treeItem, lazy = false) {
 		vscode.window.showInformationMessage('No url selected');
 	};
 
+	const useKeyWords = treeItem.keywords;
+
 	const reverseType = lazy? "reverse_lazy": "reverse";
 	// get the reverse name
 	const reverseName = treeItem.ogLabel;
 
 	const simpleArgs = treeItem.children.map((arg) => {
 		const _arg = arg.ogLabel.split('=')[0];
-		return `"${_arg}": str(%${_arg}%)`;
+		return useKeyWords? `"${_arg}": str(%${_arg}%)`: `%${_arg}%`;
 	});
 
-	const args = simpleArgs.length > 0? `, kwargs={${simpleArgs.join(', ')}}`: '';
+	const urlArguments = simpleArgs.length > 0? useKeyWords? `, kwargs={${simpleArgs.join(', ')}}`: `, args=[${simpleArgs.join(', ')}]`: '';
 
 	// generate the reverse function
-	const reverseUrl = `${reverseType}("${reverseName}"${args})`
+	const reverseUrl = `${reverseType}("${reverseName}"${urlArguments})`
 
 	addToClipBoard(reverseUrl);
 
@@ -106,7 +103,7 @@ function readAndDisplayUrls (projects) {
 
 					// url config arguments
 					const urlArgs = appUrlPattern.arguments.map((arg) => new provider.TreeItem(`${arg.name}=${arg.argType}`, provider.trees.ARGUMENT, [], appName));
-					return new provider.TreeItem(appUrlPattern.reverseName, provider.trees.URL, urlArgs, null, appName);
+					return new provider.TreeItem(appUrlPattern.reverseName, provider.trees.URL, urlArgs, null, appName, settings);
 				});
 
 				// add app
@@ -161,10 +158,11 @@ function activate() {
 			};
 			
 			const reverseName = treeItem.ogLabel;
+			const useKeyWords = treeItem.keywords;
 
 			const args = treeItem.children.map((arg) => {
 				const _arg = arg.ogLabel.split('=')[0];
-				return `%${_arg}%`;
+				return useKeyWords? `${_arg}=%${_arg}%` :`%${_arg}%`;
 			}).join(' ');
 
 			const templateUrl = `{% url '${reverseName}' ${args === ''? '': `${args} `}%}`;
@@ -177,7 +175,7 @@ function activate() {
 		// copy for reverse
 		vscode.commands.registerCommand('read-urls.copyForReverse', (treeItem) => getReverseUrl(treeItem));
 
-		// // copy reverse lazy
+		// copy reverse lazy
 		vscode.commands.registerCommand('read-urls.copyForReverseLazy', (treeItem) => getReverseUrl(treeItem, true));
 	} else {
 		vscode.window.showInformationMessage('Open a Django project to use the extension');

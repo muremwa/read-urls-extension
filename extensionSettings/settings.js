@@ -7,7 +7,8 @@ const defaultSettings = {
     autoLoadModels: true,
     registeredAppsOnly: false,
     builtInAuth: false,
-    expandApps: 'normal'
+    expandApps: 'normal',
+    urlWithKeywords: true
 }
 
 
@@ -34,7 +35,8 @@ function cleanUpSettings (tempSettings) {
     autoLoadModels: boolean,
     builtInAuth: boolean,
     expandApps: string,
-    registeredAppsOnly: false
+    registeredAppsOnly: false,
+    urlWithKeywords: true
 }} extensionSettings
 */
 function loadSettings (rootPath, errorWithSettings) {

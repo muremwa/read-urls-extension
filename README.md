@@ -2,7 +2,8 @@
 Reads all urls configurations (`urls.py`) declared in all Django projects within a VSCODE workspace and copy to clipboard.  
 
 > ### ✨✨Introducing [settings](#settings 'new settings') for the extension ✨✨  
-> Models in the project are now automatically detected by the extension.
+> Models in the project are now automatically detected by the extension.  
+> You can now [switch](#settings 'settings') between keyword and positional arguments in settings for your urls.
 <br>
 
 Gives the option of copying the url as __reverse__, __reverse_lazy__ or as a __template tag__ to your __clipboard__.  
@@ -42,7 +43,9 @@ On hovering over a url name, there are three buttons __(from left to right)__.
 2. Copy 'reverse_lazy' url.
 3. Copy as a template tag.
 
-All three copy to clipboard and can be pasted in your code, all you need to change is names of the arguments to match you namespace *(The arguments are surrounded by **'%'** to make sure your editor or linter catches it to remind you to change it)*.
+All three copy to clipboard and can be pasted in your code, all you need to change is names of the arguments to match you namespace *(The arguments are surrounded by **'%'** to make sure your editor or linter catches it to remind you to change it)*.  
+
+The three are copied using keyword arguments i.e. _kwargs_ to switch to positional arguments i.e. _args_ add `urlWithKeywords: false` to settings.
 - - -
   ![hover buttons](media/imgs/hovering_buttons.png 'hover over a url to expose available actions')
 - - -
@@ -54,11 +57,12 @@ The extension now has settings. They live inside `.vscode/urlConfigs/settings.js
 Options for settings are explained below showing an example `.vscode/urlConfigs/settings.json` file;
 ```json
     {
-        adminUrls: true,
-        autoLoadModels: true,
-        registeredAppsOnly: false,
-        builtInAuth: false,
-        expandApps: 'normal'
+        "adminUrls": true,
+        "autoLoadModels": true,
+        "registeredAppsOnly": false,
+        "builtInAuth": false,
+        "expandApps": "normal",
+        "urlWithKeywords": true
     }
 
 ```
@@ -67,7 +71,8 @@ Options for settings are explained below showing an example `.vscode/urlConfigs/
 2. `autoLoadModels` **[Boolean]**: `true` to automatically discover models and `false` to use just `.vscode/urlConfigs/models.json` (the traditional approach).  
 3. `registeredAppsOnly` **[Boolean]**: Automatically detect models from registered apps only. Default is `false`.
 4. `builtInAuth` **[Boolean]**: `true` to show url configurations from the built-in authentication sytem i.e. `django.contrib.auth.urls` or `false` to not.  
-5. `expandApps` **[String]**: Collapse or expand the Apps to show urls. Choices are 3; `collapsed`, `expanded` or `normal`. normal is the default.
+5. `expandApps` **[String]**: Collapse or expand the Apps to show urls. Choices are 3; `collapsed`, `expanded` or `normal`. normal is the default.  
+6. `urlWithKeywords` **[Boolean]**: The _reverse & reverse_lazy functions_ and _url template tag_ use keywords arguments if `true` and positional arguments if `false` i.e. ___args___ or ___kwargs___. The default is true.
    
 
 > `expandApps` requires a window reload to show changes
