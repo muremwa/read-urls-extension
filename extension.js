@@ -80,7 +80,7 @@ function readAndDisplayUrls (projects) {
 		});
 
 		// load pre defined url configurations
-		const detectedModels = settings.autoLoadModels? modelDetection.detect(projectPath, settings.registeredAppsOnly): new Map();
+		const detectedModels = settings.autoLoadModels && settings.adminUrls? modelDetection.detect(projectPath, settings.registeredAppsOnly): new Map();
 		const extraUrlPatterns = externalUrls(projectPath, settings, detectedModels, (error, file) => {
 			vscode.window.showErrorMessage(`The configurations in ${file} are incorrect`);
 		}, () => {
