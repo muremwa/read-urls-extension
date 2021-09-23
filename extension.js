@@ -17,7 +17,7 @@ const addToClipBoard = (stringToAdd) => clipboard.writeSync(stringToAdd);
 
 
 /**
- * @param {provider.TreeItem} treeItem
+ * @param {provider.URLConfigTreeItem} treeItem
  * @param {Boolean} lazy
  * @returns {void}
 */
@@ -26,21 +26,18 @@ function getReverseUrl (treeItem, lazy = false) {
 		vscode.window.showInformationMessage('No url selected');
 	};
 
-	const useKeyWords = treeItem.keywords;
-
-	const reverseType = lazy? "reverse_lazy": "reverse";
 	// get the reverse name
 	const reverseName = treeItem.ogLabel;
+	const reverseType = lazy? "reverse_lazy": "reverse";
 
 	const simpleArgs = treeItem.children.map((arg) => {
-		const _arg = arg.ogLabel.split('=')[0];
-		return useKeyWords? `"${_arg}": str(%${_arg}%)`: `%${_arg}%`;
-	});
+		return treeItem.keywords? `'${arg.argumentName}': str(%${arg.argumentName}%)`: `%${arg.argumentName}%`
+	}).join(', ');
 
-	const urlArguments = simpleArgs.length > 0? useKeyWords? `, kwargs={${simpleArgs.join(', ')}}`: `, args=[${simpleArgs.join(', ')}]`: '';
+	const urlArguments = simpleArgs.length > 0? treeItem.keywords? `, kwargs={${simpleArgs}}`: `, args=[${simpleArgs}]`:'';
 
 	// generate the reverse function
-	const reverseUrl = `${reverseType}("${reverseName}"${urlArguments})`
+	const reverseUrl = `${reverseType}('${reverseName}'${urlArguments})`
 
 	addToClipBoard(reverseUrl);
 
@@ -84,31 +81,48 @@ function readAndDisplayUrls (projects) {
 			vscode.window.showErrorMessage(`Wrong format on ${_project[0]}/.vscode/urlConfigs/models.json`)
 		});
 
-		// merge both patterns
-		const mergedPatterns = [...extraUrlPatterns.keys()].length && realProject? new Map([...extraUrlPatterns, ...urlPatterns]): urlPatterns;
-
-
 		// this shall contain all TreeItems to show for a single project
 		const urlTreeItems = [];
+		const expandAppsSettings = {
+			force: false,
+			collapse: false
+		};
+
+		// appropriate collapse settings
+		switch (settings.expandApps) {
+			case 'collapsed':
+				expandAppsSettings.force = true;
+				expandAppsSettings.collapse = true;
+				break;
+			
+			case 'expanded':
+				expandAppsSettings.force = true;
+				break;
+		
+			default:
+				break;
+		};
 
 		const createTreeItems = (patterns, extra) => {
 			// loop through all patterns and create tree items
 			for (const app of patterns.keys()) {
-				const appUrlPatterns = mergedPatterns.get(app);
+				const appUrlPatterns = patterns.get(app);
 
 				// create urlConfig children
-				const appUrlConfigs = appUrlPatterns.map((appUrlPattern) => {
-					const _appName = appUrlPattern.reverseName.split(':');
-					const appName = _appName.length === 2? _appName[1]: appUrlPattern.reverseName;
+				const appUrlConfigs = appUrlPatterns.map((urlConfigPattern) => {
+					const splitReverseName = urlConfigPattern.reverseName.split(':');
+					const urlName = splitReverseName.length === 2? splitReverseName[1]: urlConfigPattern.reverseName;
 
 					// url config arguments
-					const urlArgs = appUrlPattern.arguments.map((arg) => new provider.TreeItem(`${arg.name}=${arg.argType}`, provider.trees.ARGUMENT, [], appName));
-					return new provider.TreeItem(appUrlPattern.reverseName, provider.trees.URL, urlArgs, null, appName, settings);
+					const urlArgs = urlConfigPattern.arguments.map((arg) => new provider.ArgumentTreeItem(arg.name, arg.argType, urlName));
+
+					// add the arguments
+					return new provider.URLConfigTreeItem(urlConfigPattern.reverseName, urlArgs, urlName, settings.urlWithKeywords);
 				});
 
 				// add app
 				urlTreeItems.push(
-					new provider.TreeItem(app, provider.trees.APP, appUrlConfigs, null, null, settings, extra)
+					new provider.AppTreeItem(app, appUrlConfigs, extra, expandAppsSettings)
 				);
 			};
 		}
@@ -121,7 +135,7 @@ function readAndDisplayUrls (projects) {
 
 		if (realProject) {
 			projectTrees.push(
-				new provider.TreeItem(_project[0], provider.trees.PROJECT, urlTreeItems)
+				new provider.ProjectTreeItem(_project[0], urlTreeItems)
 			);
 		};
 	};
@@ -157,14 +171,12 @@ function activate() {
 				vscode.window.showInformationMessage('No url selected');
 			};
 			
-			const reverseName = treeItem.ogLabel;
-			const useKeyWords = treeItem.keywords;
-
+			
 			const args = treeItem.children.map((arg) => {
-				const _arg = arg.ogLabel.split('=')[0];
-				return useKeyWords? `${_arg}=%${_arg}%` :`%${_arg}%`;
+				return treeItem.keywords? `${arg.argumentName}=%${arg.argumentName}%` :`%${arg.argumentName}%`;
 			}).join(' ');
-
+			
+			const reverseName = treeItem.ogLabel;
 			const templateUrl = `{% url '${reverseName}' ${args === ''? '': `${args} `}%}`;
 
 			addToClipBoard(templateUrl);

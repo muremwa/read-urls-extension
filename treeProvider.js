@@ -1,12 +1,5 @@
 const vscode = require('vscode');
 const path = require('path');
-const trees = {
-    APP: 0,
-    URL: 1,
-    ARGUMENT: 2,
-    PROJECT: 3 
-};
-
 
 class TreeDataProvider {
     constructor(urlsTreeItems) {
@@ -26,79 +19,108 @@ class TreeDataProvider {
 
 };
 
-
-class TreeItem extends vscode.TreeItem {
- 
-    constructor (label, treeType, children, parent, simpleLabel, settings, isExtraApp, useKeyWords) {
-        let collapsedTreeOrNot, labelToFeed, contextValue, tooltip, icons, keywords;
-
-        if (treeType === trees.APP) {
-            contextValue = 'app';
-
-            switch (settings.expandApps) {
-                case 'collapsed':
-                    collapsedTreeOrNot = vscode.TreeItemCollapsibleState.Collapsed;
-                    break;
-                
-                case 'expanded':
-                    collapsedTreeOrNot = vscode.TreeItemCollapsibleState.Expanded;
-                    break;
-            
-                default:
-                    collapsedTreeOrNot = label === 'admin' || isExtraApp? vscode.TreeItemCollapsibleState.Collapsed: vscode.TreeItemCollapsibleState.Expanded;
-                    break;
-            }
-            
-            if (label.includes('READER_FILE_PATH')) {
-                const _tempLabel = label.split('\\');
-                labelToFeed = _tempLabel.splice(_tempLabel.length - 2, 2).join('\\');
-            } else {
-                labelToFeed = label;
-            };
-            labelToFeed = labelToFeed.toUpperCase();
-            tooltip = `App called ${labelToFeed}`;
-        
-        } else if (treeType === trees.URL) {
-            collapsedTreeOrNot = vscode.TreeItemCollapsibleState.Collapsed;
-            contextValue = 'urlName';
-            labelToFeed = simpleLabel;
-            keywords = settings.urlWithKeywords;
-            tooltip = `URL config named ${labelToFeed}`;
-
-        } else if (treeType === trees.ARGUMENT) {
-            contextValue = 'args';
-            const _tempLabel = label.split('=');
-            const typeName = _tempLabel[1] === 'NULL'? 'Type undeclared': _tempLabel[1];
-            labelToFeed = `${_tempLabel[0]} <${typeName}>`;
-            tooltip = `URL config argument for ${parent}`;
-        } else if (treeType === trees.PROJECT) {
-            contextValue = 'project';
-            labelToFeed = `${label} (PROJECT)`;
-            collapsedTreeOrNot = vscode.TreeItemCollapsibleState.Collapsed;
-            tooltip = `Project named ${label}`;
-            icons = {
-                light: path.join(__dirname, 'media', 'folder_light.png'),
-                dark: path.join(__dirname, 'media', 'folder_dark.png')
-            }
-        };
-
-
-        super(labelToFeed, children === undefined || children.length === 0 ? vscode.TreeItemCollapsibleState.None : collapsedTreeOrNot);
-        this.children = children;
-        this.ogLabel = label;
-        this.contextValue = contextValue;
-        this.tooltip = tooltip;
-        this.iconPath = icons;
-        this.keywords = keywords;
+class ArgumentTreeItem extends vscode.TreeItem {
+    /**
+     * 
+     * @param {string} argumentName 
+     * @param {string} argumentType 
+     * @param {string} parent 
+     */
+    constructor(argumentName, argumentType, parent) {
+        super(`${argumentName} <${argumentType === 'NULL'? 'type_undeclared': argumentType}>`, vscode.TreeItemCollapsibleState.None);
+        this.contextValue = 'args'
+        this.tooltip = `URL config argument for ${parent}`;
+        this.argumentName = argumentName;
     };
-
 };
+
+
+class URLConfigTreeItem extends vscode.TreeItem {
+    /**
+     * 
+     * @param {string} label 
+     * @param {ArgumentTreeItem[]} children 
+     * @param {string} urlConfigName 
+     * @param {boolean} keywords 
+     */
+    constructor (label, children, urlConfigName, keywords) {
+        super(urlConfigName, children && children.length > 0? vscode.TreeItemCollapsibleState.Collapsed: vscode.TreeItemCollapsibleState.None);
+        this.children = children;
+        this.contextValue = 'urlName';
+        this.ogLabel = label;
+        this.keywords = keywords;
+        this.tooltip = `URL config named ${urlConfigName}`;
+    };
+};
+
+
+class AppTreeItem extends vscode.TreeItem {
+    /**
+     * 
+     * @param {string} label 
+     * @param {URLConfigTreeItem[]} children 
+     * @param {boolean} isExtraApp 
+     * @param {{force: boolean, collapsed: boolean}} forceCollapse 
+     */
+    constructor (label, children, isExtraApp, forceCollapse = {force: false, collapsed: false}) {
+        const collapsedState = () => {
+            let state = vscode.TreeItemCollapsibleState.None;
+
+            if (children.length > 0) {
+                if (forceCollapse.force) {
+                    state = forceCollapse.collapsed? vscode.TreeItemCollapsibleState.Collapsed: vscode.TreeItemCollapsibleState.Expanded;
+                } else {
+                    state = isExtraApp? vscode.TreeItemCollapsibleState.Collapsed: vscode.TreeItemCollapsibleState.Expanded;
+                };
+            };
+            return state;
+        };
+        const labelToFeed = ((() => {
+            let processedLabel = label;
+
+            if (label.includes('READER_FILE_PATH_')) {
+                const homeMatch = label.match(/READER_FILE_PATH_.*?\\(?<home>[^\\/:*?"<>|]+\\urls.py)$/);
+                processedLabel = homeMatch && homeMatch.groups.home? homeMatch.groups.home: 'UNKNOWN_APP\\urls.py';
+            };
+
+            return processedLabel.toUpperCase();
+        })());
+
+        super(labelToFeed, collapsedState());
+        this.children = children;
+        this.contextValue = 'app'
+        this.ogLabel = label;
+        this.tooltip = `App called ${labelToFeed}`;
+    }
+}
+
+
+class ProjectTreeItem extends vscode.TreeItem {
+    /**
+     * 
+     * @param {string} projectTitle 
+     * @param {AppTreeItem[]} children 
+     */
+    constructor (projectTitle, children) {
+        super(`${projectTitle} (PROJECT)`, vscode.TreeItemCollapsibleState.Collapsed);
+        this.contextValue = 'project';
+        this.tooltip = `Project called ${projectTitle}`;
+        this.ogLabel = projectTitle;
+        this.children = children;
+        this.iconPath = {
+            light: path.join(__dirname, 'media', 'folder_light.png'),
+            dark: path.join(__dirname, 'media', 'folder_dark.png')
+        };
+    };
+}
 
 
 module.exports = {
     TreeDataProvider,
-    TreeItem,
-    trees
+    ArgumentTreeItem,
+    URLConfigTreeItem,
+    AppTreeItem,
+    ProjectTreeItem,
 };
 
 
