@@ -1,9 +1,11 @@
 # Django URLs configurations Reader.
 Reads all urls configurations (`urls.py`) declared in all Django projects within a VSCODE workspace and copy to clipboard.  
 
-> ### ✨✨Introducing [settings](#settings 'new settings') for the extension ✨✨  
+> ### New in version 2.1
+> ✨✨Introducing [settings](#settings 'new settings') for the extension ✨✨  
 > Models in the project are now automatically detected by the extension.  
 > You can now [switch](#settings 'settings') between keyword and positional arguments in settings for your urls.
+> Built-in auth/`django.contrib.auth` URL configurations can be included or not depending on [settings](#custom-url-configurations 'built-in auth') using `builtInAuth: true`
 <br>
 
 Gives the option of copying the url as __reverse__, __reverse_lazy__ or as a __template tag__ to your __clipboard__.  
@@ -175,6 +177,8 @@ __Models can now be automatically detected.__
         "app_label_2": ["model3"]
     }
 ```
+
+*_The extension detects models if you use the built-in `django.contrib.admin` and have `admin.py` or `/admin/__init__.py` in your apps. Support for others coming soon_ :)
 - - -
 ## Multiple Projects in a workspace.
 The extension now supports multiple projects in one workspace. Once you add a folder to the workspace, reload the window to view changes.  

@@ -35,3 +35,11 @@
 ## [2.0.1] - 2021-06-16
 ### Added
 - Renamed from __django-urls-reader__ to __Django URLS Reader__.
+
+## [2.1.0] - 2021-09-23
+### Added
+- Adds settings to the extension to customize behavior.
+- Models in a project are now automatically detected by the extension.
+- You can switch between using positional and keyword arguments in the *reverse*, *reverse_lazy* fucntions and the *url template tag*
+- You can choose not to have admin URL configurations added automatically.
+- Built-in auth/`django.contrib.auth` URL configurations are can be added like the admin URL configurations.
