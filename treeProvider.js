@@ -68,7 +68,7 @@ class AppTreeItem extends vscode.TreeItem {
 
             if (children.length > 0) {
                 if (forceCollapse.force) {
-                    state = forceCollapse.collapsed? vscode.TreeItemCollapsibleState.Collapsed: vscode.TreeItemCollapsibleState.Expanded;
+                    state = forceCollapse.collapse? vscode.TreeItemCollapsibleState.Collapsed: vscode.TreeItemCollapsibleState.Expanded;
                 } else {
                     state = isExtraApp? vscode.TreeItemCollapsibleState.Collapsed: vscode.TreeItemCollapsibleState.Expanded;
                 };
