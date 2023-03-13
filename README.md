@@ -1,3 +1,5 @@
+This repo is going to be archived and later versions built in purely typescript. Repository found [here](https://github.com/muremwa/read-urls-extension-ts).  
+
 # Django URLs configurations Reader.
 Reads all urls configurations (`urls.py`) declared in all Django projects within a VSCODE workspace and copy to clipboard.  
 
